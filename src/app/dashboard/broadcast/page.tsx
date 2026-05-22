@@ -234,7 +234,7 @@ function StepDots({ step }: { step: Step }) {
       {visible.map((_,i) => (
         <div key={i} className="rounded-full transition-all" style={{
           width: i===idx ? 20 : 6, height: 6,
-          background: i<=idx ? "var(--accent)" : "var(--border)",
+          background: i<=idx ? "var(--text-dark)" : "var(--border)",
         }} />
       ))}
     </div>
@@ -369,12 +369,12 @@ function CreateModal({ state, dispatch, onCreated }:
                       onClick={() => dispatch({ type:"SET", field:"segment", value:seg.value })}
                       className="flex items-center justify-between p-4 rounded-xl transition-all text-left"
                       style={{ background: state.segment===seg.value ? "white" : "var(--cream-2)",
-                        border:`1.5px solid ${state.segment===seg.value ? "var(--accent)" : "var(--border)"}`,
+                        border:`1.5px solid ${state.segment===seg.value ? "var(--text-dark)" : "var(--border)"}`,
                         cursor:"pointer" }}>
                       <div className="flex items-center gap-3">
                         <div className="w-4 h-4 rounded-full border-2 flex-shrink-0"
-                          style={{ borderColor: state.segment===seg.value ? "var(--accent)" : "var(--border)",
-                            background: state.segment===seg.value ? "var(--accent)" : "transparent" }} />
+                          style={{ borderColor: state.segment===seg.value ? "var(--text-dark)" : "rgba(26,20,17,0.2)",
+                            background: state.segment===seg.value ? "var(--text-dark)" : "transparent" }} />
                         <span style={{ fontSize:14, color:"var(--text-dark)", fontWeight: state.segment===seg.value ? 600 : 400 }}>
                           {seg.label}
                         </span>
