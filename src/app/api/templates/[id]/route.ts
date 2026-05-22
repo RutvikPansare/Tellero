@@ -1,0 +1,58 @@
+import { NextResponse }  from "next/server";
+import { createClient }   from "@/lib/supabase/server";
+import { deleteTemplate } from "@/app/dashboard/templates/_lib/metaTemplateApi";
+
+export async function DELETE(
+  _req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const supabase = await createClient();
+    const db = supabase as any;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    /* Fetch the template to check ownership & get Meta ID */
+    const { data: tmpl, error: fetchErr } = await db
+      .from("templates")
+      .select("id, user_id, name, meta_template_id, status")
+      .eq("id", params.id)
+      .single() as {
+        data: { id: string; user_id: string; name: string; meta_template_id: string | null; status: string } | null;
+        error: unknown;
+      };
+
+    if (fetchErr || !tmpl) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (tmpl.user_id !== user.id) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    /* Only draft/rejected can be deleted */
+    if (!["draft", "rejected"].includes(tmpl.status)) {
+      return NextResponse.json({ error: "Only draft or rejected templates can be deleted" }, { status: 400 });
+    }
+
+    /* Delete from Meta if it was submitted */
+    if (tmpl.meta_template_id) {
+      const { data: profile } = await db
+        .from("profiles")
+        .select("waba_id, meta_access_token")
+        .eq("id", user.id)
+        .single() as { data: { waba_id: string | null; meta_access_token: string | null } | null };
+
+      if (profile?.waba_id && profile?.meta_access_token) {
+        try {
+          await deleteTemplate(profile.waba_id, profile.meta_access_token, tmpl.name);
+        } catch {
+          /* Non-fatal — delete from DB anyway */
+        }
+      }
+    }
+
+    await db.from("templates").delete().eq("id", params.id);
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[DELETE /api/templates/[id]]", err);
+    return NextResponse.json({ error: (err as Error).message }, { status: 500 });
+  }
+}

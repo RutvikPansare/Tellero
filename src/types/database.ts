@@ -18,6 +18,8 @@ export interface Database {
           brand_name: string | null
           whatsapp_number: string | null
           plan: 'free' | 'starter' | 'growth' | 'scale'
+          waba_id: string | null
+          meta_access_token: string | null
         }
         Insert: {
           id: string
@@ -27,6 +29,8 @@ export interface Database {
           brand_name?: string | null
           whatsapp_number?: string | null
           plan?: 'free' | 'starter' | 'growth' | 'scale'
+          waba_id?: string | null
+          meta_access_token?: string | null
         }
         Update: {
           id?: string
@@ -36,6 +40,8 @@ export interface Database {
           brand_name?: string | null
           whatsapp_number?: string | null
           plan?: 'free' | 'starter' | 'growth' | 'scale'
+          waba_id?: string | null
+          meta_access_token?: string | null
         }
       }
       broadcasts: {
@@ -132,6 +138,56 @@ export interface Database {
           opted_in?: boolean
         }
       }
+      templates: {
+        Row: {
+          id: string
+          created_at: string
+          updated_at: string
+          user_id: string
+          name: string
+          category: 'MARKETING' | 'UTILITY' | 'AUTHENTICATION'
+          language: string
+          components: Json[]
+          variable_labels: Record<string, string>
+          meta_template_id: string | null
+          status: 'draft' | 'pending' | 'approved' | 'rejected' | 'paused'
+          rejection_reason: string | null
+          submitted_at: string | null
+          approved_at: string | null
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          user_id: string
+          name: string
+          category: 'MARKETING' | 'UTILITY' | 'AUTHENTICATION'
+          language?: string
+          components?: Json[]
+          variable_labels?: Record<string, string>
+          meta_template_id?: string | null
+          status?: 'draft' | 'pending' | 'approved' | 'rejected' | 'paused'
+          rejection_reason?: string | null
+          submitted_at?: string | null
+          approved_at?: string | null
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+          name?: string
+          category?: 'MARKETING' | 'UTILITY' | 'AUTHENTICATION'
+          language?: string
+          components?: Json[]
+          variable_labels?: Record<string, string>
+          meta_template_id?: string | null
+          status?: 'draft' | 'pending' | 'approved' | 'rejected' | 'paused'
+          rejection_reason?: string | null
+          submitted_at?: string | null
+          approved_at?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never
@@ -140,7 +196,8 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      template_status:   'draft' | 'pending' | 'approved' | 'rejected' | 'paused'
+      template_category: 'MARKETING' | 'UTILITY' | 'AUTHENTICATION'
     }
   }
 }

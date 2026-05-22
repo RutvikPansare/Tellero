@@ -364,14 +364,69 @@ create trigger on_auth_user_created
 
 
 -- ══════════════════════════════════════════════════════════
+-- 08  MESSAGE TEMPLATES
+-- ══════════════════════════════════════════════════════════
+
+do $$ begin
+  if not exists (select 1 from pg_type where typname = 'template_status') then
+    create type template_status as enum ('draft','pending','approved','rejected','paused');
+  end if;
+  if not exists (select 1 from pg_type where typname = 'template_category') then
+    create type template_category as enum ('MARKETING','UTILITY','AUTHENTICATION');
+  end if;
+end $$;
+
+create table if not exists templates (
+  id                uuid              primary key default gen_random_uuid(),
+  user_id           uuid              not null references profiles(id) on delete cascade,
+  name              text              not null,
+  category          template_category not null,
+  language          text              not null default 'en',
+  components        jsonb             not null default '[]'::jsonb,
+  variable_labels   jsonb             not null default '{}'::jsonb,
+  meta_template_id  text,
+  status            template_status   not null default 'draft',
+  rejection_reason  text,
+  submitted_at      timestamptz,
+  approved_at       timestamptz,
+  created_at        timestamptz       not null default now(),
+  updated_at        timestamptz       not null default now()
+);
+
+create unique index if not exists templates_user_name_lang_uidx
+  on templates (user_id, name, language);
+
+create index if not exists templates_user_status_idx on templates (user_id, status);
+create index if not exists templates_meta_id_idx     on templates (meta_template_id) where meta_template_id is not null;
+
+create or replace function update_templates_updated_at()
+returns trigger language plpgsql as $$
+begin new.updated_at = now(); return new; end;
+$$;
+
+drop trigger if exists templates_updated_at_trigger on templates;
+create trigger templates_updated_at_trigger
+  before update on templates
+  for each row execute function update_templates_updated_at();
+
+alter table templates enable row level security;
+
+drop policy if exists "templates_owner_all" on templates;
+create policy "templates_owner_all"
+  on templates for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+
+-- ══════════════════════════════════════════════════════════
 -- Done! ✓
 -- Tables:   profiles, contacts, broadcasts,
 --           broadcast_recipients, automations,
---           analytics_events, shopify_stores
+--           analytics_events, shopify_stores, templates
 -- Views:    revenue_summary
 -- Triggers: on_auth_user_created (auto profile + automations)
 --           updated_at on all mutable tables
 -- Functions: set_updated_at, handle_new_user, seed_automations,
---            refresh_broadcast_stats
+--            refresh_broadcast_stats, update_templates_updated_at
 -- RLS:      enabled on all tables, owner-scoped policies
 -- ══════════════════════════════════════════════════════════
