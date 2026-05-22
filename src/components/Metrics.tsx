@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 
 const metrics = [
-  { label: "COD Confirmation",     number: "40%",     description: "Reduction in return-to-origin rate in the first 30 days" },
-  { label: "Abandoned Cart Recovery", number: "₹30,000", description: "Average monthly revenue recovered automatically per brand" },
-  { label: "Repeat Purchase Rate", number: "30%",     description: "Increase in reorder revenue from existing customers" },
+  { label: "COD Confirmation",     number: "40%",     description: "Projected reduction in return-to-origin rate, based on industry benchmarks" },
+  { label: "Abandoned Cart Recovery", number: "₹30,000", description: "Estimated monthly revenue recoverable per brand from abandoned carts" },
+  { label: "Repeat Purchase Rate", number: "30%",     description: "Target uplift in reorder revenue from automated reminders" },
 ];
 
 export default function Metrics() {
@@ -19,9 +19,9 @@ export default function Metrics() {
           transition={{ duration: 0.6 }}
           className="mb-14"
         >
-          <p className="label-lime mb-4">Outcomes</p>
+          <p className="label-lime mb-4">Projected outcomes</p>
           <h2 className="heading-xl text-white max-w-xl">
-            Results you can take to the bank.
+            The numbers we&apos;re engineering for.
           </h2>
         </motion.div>
 

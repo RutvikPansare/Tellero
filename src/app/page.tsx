@@ -8,6 +8,7 @@ import Comparison from "@/components/Comparison";
 import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
 import ROICalculator from "@/components/ROICalculator";
+import Waitlist from "@/components/Waitlist";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -23,6 +24,7 @@ export default function Home() {
       <Testimonials />
       <Pricing />
       <ROICalculator />
+      <Waitlist />
       <Footer />
     </main>
   );

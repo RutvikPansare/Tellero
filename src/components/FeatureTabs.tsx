@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -8,85 +9,30 @@ const fadeUp = {
   viewport: { once: true },
 };
 
-/* ── Small screenshot placeholder — replace with real image ── */
-function ScreenPlaceholder({ label }: { label: string }) {
-  return (
-    <div
-      className="card-cream-inner w-full flex items-center justify-center p-6"
-      style={{ minHeight: 220 }}
-    >
-      {/* PLACEHOLDER: Replace with actual product screenshot */}
-      <p className="label text-center" style={{ color: "var(--text-muted)" }}>
-        {label}
-      </p>
-    </div>
-  );
-}
-
 /* ── Full-width feature card (text left, mockup right) ── */
 function FeatureCardFull({
-  label,
-  stat,
-  statLabel,
-  headline,
-  bullets,
-  screenshotLabel,
-  delay = 0,
-  flip = false,
+  label, stat, statLabel, headline, bullets, image, delay = 0, flip = false,
 }: {
-  label: string;
-  stat: string;
-  statLabel: string;
-  headline: string;
-  bullets: string[];
-  screenshotLabel: string;
-  delay?: number;
-  flip?: boolean;
+  label: string; stat: string; statLabel: string; headline: string;
+  bullets: string[]; image: string; delay?: number; flip?: boolean;
 }) {
   return (
-    <motion.div
-      {...fadeUp}
-      transition={{ duration: 0.55, delay }}
-      className="card bento-full"
-    >
-      <div
-        className={`flex flex-col lg:flex-row gap-0 ${
-          flip ? "lg:flex-row-reverse" : ""
-        }`}
-      >
+    <motion.div {...fadeUp} transition={{ duration: 0.55, delay }} className="card bento-full">
+      <div className={`flex flex-col lg:flex-row gap-0 ${flip ? "lg:flex-row-reverse" : ""}`}>
         {/* Text side */}
         <div className="flex-1 p-8 sm:p-10 flex flex-col justify-center gap-6">
           <p className="label">{label}</p>
-
           <div className="stat-badge self-start">
-            <span
-              className="heading-md text-[#25D366]"
-              style={{ lineHeight: 1 }}
-            >
-              {stat}
-            </span>
-            <span className="body-sm" style={{ color: "var(--text-muted)" }}>
-              {statLabel}
-            </span>
+            <span className="heading-md text-[#25D366]" style={{ lineHeight: 1 }}>{stat}</span>
+            <span className="body-sm" style={{ color: "var(--text-muted)" }}>{statLabel}</span>
           </div>
-
           <h3 className="heading-lg text-[var(--text-dark)]">{headline}</h3>
-
           <ul className="flex flex-col gap-3">
             {bullets.map((b, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span
-                  className="mt-0.5 w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
-                  style={{
-                    background: "var(--cream-2)",
-                    border: "1px solid rgba(26,20,17,0.1)",
-                  }}
-                >
-                  <span
-                    style={{ color: "#25D366", fontSize: 11, fontWeight: 700 }}
-                  >
-                    ✓
-                  </span>
+                <span className="mt-0.5 w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
+                  style={{ background: "var(--cream-2)", border: "1px solid rgba(26,20,17,0.1)" }}>
+                  <span style={{ color: "#25D366", fontSize: 11, fontWeight: 700 }}>✓</span>
                 </span>
                 <span className="body-sm">{b}</span>
               </li>
@@ -95,11 +41,15 @@ function FeatureCardFull({
         </div>
 
         {/* Screenshot side */}
-        <div
-          className="flex-1 p-6 flex items-end"
-          style={{ background: "var(--cream-2)", minHeight: 300 }}
-        >
-          <ScreenPlaceholder label={screenshotLabel} />
+        <div className="flex-1 flex items-end overflow-hidden" style={{ background: "var(--cream-2)", minHeight: 320 }}>
+          <Image
+            src={image}
+            alt={label}
+            width={800}
+            height={560}
+            className="w-full h-full object-cover object-top"
+            style={{ borderRadius: 0 }}
+          />
         </div>
       </div>
     </motion.div>
@@ -108,50 +58,33 @@ function FeatureCardFull({
 
 /* ── Half-width feature card (stacked: text top, mockup bottom) ── */
 function FeatureCardHalf({
-  label,
-  stat,
-  statLabel,
-  headline,
-  description,
-  screenshotLabel,
-  delay = 0,
+  label, stat, statLabel, headline, description, image, delay = 0,
 }: {
-  label: string;
-  stat: string;
-  statLabel: string;
-  headline: string;
-  description: string;
-  screenshotLabel: string;
-  delay?: number;
+  label: string; stat: string; statLabel: string; headline: string;
+  description: string; image: string; delay?: number;
 }) {
   return (
-    <motion.div
-      {...fadeUp}
-      transition={{ duration: 0.55, delay }}
-      className="card flex flex-col"
-    >
+    <motion.div {...fadeUp} transition={{ duration: 0.55, delay }} className="card flex flex-col">
       <div className="p-8 sm:p-10 flex flex-col gap-5">
         <p className="label">{label}</p>
-
         <div className="stat-badge self-start">
-          <span
-            className="heading-md text-[#25D366]"
-            style={{ lineHeight: 1 }}
-          >
-            {stat}
-          </span>
-          <span className="body-sm" style={{ color: "var(--text-muted)" }}>
-            {statLabel}
-          </span>
+          <span className="heading-md text-[#25D366]" style={{ lineHeight: 1 }}>{stat}</span>
+          <span className="body-sm" style={{ color: "var(--text-muted)" }}>{statLabel}</span>
         </div>
-
         <h3 className="heading-sm text-[var(--text-dark)]">{headline}</h3>
         <p className="body-sm">{description}</p>
       </div>
 
-      {/* Screenshot area */}
-      <div className="p-6 pt-0">
-        <ScreenPlaceholder label={screenshotLabel} />
+      {/* Screenshot */}
+      <div className="flex-1 overflow-hidden" style={{ minHeight: 220 }}>
+        <Image
+          src={image}
+          alt={label}
+          width={800}
+          height={500}
+          className="w-full h-full object-cover object-top"
+          style={{ borderRadius: 0 }}
+        />
       </div>
     </motion.div>
   );
@@ -161,21 +94,15 @@ export default function FeatureTabs() {
   return (
     <section id="features" className="section-cream py-24 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section header */}
-        <motion.div
-          {...fadeUp}
-          transition={{ duration: 0.5 }}
-          className="mb-12"
-        >
+        <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="mb-12">
           <p className="label mb-4">Platform</p>
           <h2 className="heading-xl text-[var(--text-dark)] max-w-2xl">
             Stop losing money to problems you can&apos;t see.
           </h2>
         </motion.div>
 
-        {/* Bento grid */}
         <div className="bento-grid grid-cols-1 md:grid-cols-2">
-          {/* Row 1 — full width */}
+          {/* Row 1 — full width: COD dashboard */}
           <FeatureCardFull
             label="COD Returns"
             stat="40%"
@@ -187,18 +114,18 @@ export default function FeatureTabs() {
               "High-risk orders flagged by AI before dispatch",
               "Saves brands ₹8,000–15,000/month in reverse logistics",
             ]}
-            screenshotLabel="COD confirmation automation — order list with AI risk scores and confirmation toggle"
+            image="/dashboard.png"
             delay={0.05}
           />
 
-          {/* Row 2 — two half cards */}
+          {/* Row 2 — two halves */}
           <FeatureCardHalf
             label="Abandoned Carts"
             stat="₹30k"
             statLabel="recovered per month"
             headline="Recover 35–45% of abandoned carts automatically."
             description="Shopify detects the exit. Tellero waits 1 hour, checks if they purchased, and if not — sends a personalized WhatsApp with their exact cart. Recovers ₹25,000–40,000 monthly."
-            screenshotLabel="Abandoned cart automation config — timing controls, message preview, conversion stats"
+            image="/abandoned-cart.png"
             delay={0.1}
           />
 
@@ -208,11 +135,11 @@ export default function FeatureTabs() {
             statLabel="repeat purchase lift"
             headline="Remind customers to reorder before they forget."
             description="Set replenishment cycles per product — 25 days for skincare, 30 for supplements. Customers get a personal WhatsApp at exactly the right time, every time."
-            screenshotLabel="Reorder reminder settings — cycle selector, product categories, open rates"
+            image="/reorder.png"
             delay={0.15}
           />
 
-          {/* Row 3 — full width, flipped */}
+          {/* Row 3 — full width, flipped: Customer Health */}
           <FeatureCardFull
             label="Customer Intelligence"
             stat="2.4×"
@@ -224,7 +151,7 @@ export default function FeatureTabs() {
               "One-click win-back campaign to at-risk segments",
               "Revenue dashboard shows ₹ generated by Tellero this month",
             ]}
-            screenshotLabel="Customer health dashboard — green/yellow/red scores with churn prediction and win-back launcher"
+            image="/customer-health.png"
             delay={0.2}
             flip
           />
