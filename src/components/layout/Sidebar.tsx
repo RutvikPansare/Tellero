@@ -4,22 +4,16 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Megaphone,
-  Users,
-  BarChart2,
-  Settings,
-  LogOut,
-  Zap,
-  MessageSquare,
-  ChevronRight,
+  Megaphone, Users, BarChart2, Settings,
+  LogOut, Zap, MessageSquare, ChevronRight,
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { label: "Broadcasts",   href: "/dashboard/broadcast",     icon: Megaphone,    badge: null   },
-  { label: "Contacts",     href: "/dashboard/contacts",      icon: Users,        badge: null   },
-  { label: "Analytics",    href: "/dashboard/analytics",     icon: BarChart2,    badge: "Soon" },
-  { label: "Automations",  href: "/dashboard/automations",   icon: Zap,          badge: "Soon" },
-  { label: "Conversations",href: "/dashboard/conversations", icon: MessageSquare,badge: "Soon" },
+  { label: "Broadcasts",    href: "/dashboard/broadcast",     icon: Megaphone,     badge: null   },
+  { label: "Contacts",      href: "/dashboard/contacts",      icon: Users,         badge: null   },
+  { label: "Analytics",     href: "/dashboard/analytics",     icon: BarChart2,     badge: "Soon" },
+  { label: "Automations",   href: "/dashboard/automations",   icon: Zap,           badge: "Soon" },
+  { label: "Conversations", href: "/dashboard/conversations", icon: MessageSquare, badge: "Soon" },
 ];
 
 export default function Sidebar() {
@@ -37,35 +31,30 @@ export default function Sidebar() {
     <aside
       className="flex flex-col h-screen w-[220px] flex-shrink-0"
       style={{
-        background:  "var(--burgundy)",
-        borderRight: "1px solid rgba(255,255,255,0.06)",
+        background:  "var(--cream-2)",
+        borderRight: "1px solid var(--border)",
         fontFamily:  "var(--font-dm-sans,'DM Sans',sans-serif)",
       }}
     >
       {/* Logo */}
       <div
-        className="px-5 py-5 flex items-center gap-2"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+        className="px-5 py-5 flex items-center gap-2.5"
+        style={{ borderBottom: "1px solid var(--border)" }}
       >
         <div
           className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{ background: "rgba(197,232,74,0.15)", border: "1px solid rgba(197,232,74,0.25)" }}
+          style={{ background: "rgba(37,211,102,0.15)", border: "1px solid rgba(37,211,102,0.3)" }}
         >
-          <Megaphone size={14} style={{ color: "var(--lime)" }} />
+          <Megaphone size={14} style={{ color: "var(--accent)" }} />
         </div>
-        <span className="font-logo text-white" style={{ fontSize: 20 }}>
+        <span className="font-logo" style={{ fontSize: 20, color: "var(--text-dark)" }}>
           Tellero
         </span>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5 overflow-y-auto">
-        <p
-          className="px-3 mb-2"
-          style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)" }}
-        >
-          Menu
-        </p>
+        <p className="label px-3 mb-2">Menu</p>
 
         {NAV_ITEMS.map(({ label, href, icon: Icon, badge }) => {
           const isActive = pathname.startsWith(href);
@@ -76,40 +65,40 @@ export default function Sidebar() {
               href={isSoon ? "#" : href}
               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
               style={{
-                color:      isActive ? "var(--lime)" : "rgba(255,255,255,0.55)",
-                background: isActive ? "rgba(197,232,74,0.1)" : "transparent",
-                opacity:    isSoon   ? 0.45 : 1,
-                pointerEvents: isSoon ? "none" : "auto",
+                color:          isActive ? "var(--accent)" : "var(--text-mid)",
+                background:     isActive ? "rgba(37,211,102,0.1)" : "transparent",
+                border:         isActive ? "1px solid rgba(37,211,102,0.2)" : "1px solid transparent",
+                opacity:        isSoon ? 0.45 : 1,
+                pointerEvents:  isSoon ? "none" : "auto",
                 textDecoration: "none",
               }}
               onMouseOver={(e) => {
                 if (!isActive && !isSoon) {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.85)";
+                  e.currentTarget.style.background = "var(--cream-3)";
+                  e.currentTarget.style.color = "var(--text-dark)";
                 }
               }}
               onMouseOut={(e) => {
                 if (!isActive && !isSoon) {
                   e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.55)";
+                  e.currentTarget.style.color = "var(--text-mid)";
                 }
               }}
             >
               <Icon size={15} />
               <span className="flex-1">{label}</span>
               {badge && (
-                <span
-                  style={{
-                    fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
-                    background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.3)",
-                    padding: "2px 6px", borderRadius: 99,
-                  }}
-                >
+                <span style={{
+                  fontSize: 9, fontWeight: 700, letterSpacing: "0.08em",
+                  textTransform: "uppercase", background: "var(--cream-3)",
+                  color: "var(--text-muted)", padding: "2px 6px",
+                  borderRadius: 99, border: "1px solid var(--border)",
+                }}>
                   {badge}
                 </span>
               )}
               {isActive && !isSoon && (
-                <ChevronRight size={12} style={{ color: "var(--lime)", opacity: 0.8 }} />
+                <ChevronRight size={12} style={{ color: "var(--accent)", opacity: 0.7 }} />
               )}
             </Link>
           );
@@ -119,14 +108,14 @@ export default function Sidebar() {
       {/* Bottom */}
       <div
         className="px-3 pb-5 flex flex-col gap-0.5"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: 12 }}
+        style={{ borderTop: "1px solid var(--border)", paddingTop: 12 }}
       >
         <Link
           href="/dashboard/settings"
           className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-          style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
-          onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; e.currentTarget.style.color = "rgba(255,255,255,0.8)"; }}
-          onMouseOut={(e)  => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,255,255,0.45)"; }}
+          style={{ color: "var(--text-mid)", textDecoration: "none" }}
+          onMouseOver={(e) => { e.currentTarget.style.background = "var(--cream-3)"; e.currentTarget.style.color = "var(--text-dark)"; }}
+          onMouseOut={(e)  => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-mid)"; }}
         >
           <Settings size={15} />
           Settings
@@ -134,9 +123,9 @@ export default function Sidebar() {
         <button
           onClick={handleSignOut}
           className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all w-full text-left"
-          style={{ color: "rgba(255,180,180,0.6)", background: "transparent", border: "none", cursor: "pointer" }}
-          onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,100,100,0.08)"; e.currentTarget.style.color = "rgba(255,180,180,0.9)"; }}
-          onMouseOut={(e)  => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(255,180,180,0.6)"; }}
+          style={{ color: "var(--text-muted)", background: "transparent", border: "none", cursor: "pointer" }}
+          onMouseOver={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.07)"; e.currentTarget.style.color = "#DC2626"; }}
+          onMouseOut={(e)  => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
         >
           <LogOut size={15} />
           Sign out
