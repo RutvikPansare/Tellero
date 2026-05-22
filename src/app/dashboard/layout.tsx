@@ -8,20 +8,16 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   return (
     <div
       className="flex h-screen overflow-hidden"
       style={{
-        background: "#0A0A0A",
-        fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)",
+        background: "var(--cream)",
+        fontFamily: "var(--font-dm-sans,'DM Sans',sans-serif)",
       }}
     >
       <Sidebar />
