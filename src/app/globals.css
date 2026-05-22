@@ -1,0 +1,355 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@700;800;900&family=Nunito:wght@900&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────
+   DESIGN TOKENS — All component styles reference these
+   ───────────────────────────────────────────────────────── */
+
+:root {
+  --cream:      #F4EFE3;
+  --cream-2:    #EDE7D7;
+  --cream-3:    #E5DFD0;
+  --burgundy:   #380008;
+  --burgundy-2: #4A000E;
+  --black:      #0A0A0A;
+  --text-dark:  #1A1411;
+  --text-mid:   #6B6157;
+  --text-muted: #9C8F83;
+  --accent:     #25D366;
+  --accent-hov: #1fb358;
+  --lime:       #C5E84A;
+  --lime-hov:   #d4f55a;
+  --border:     rgba(26,20,17,0.09);
+  --border-dk:  rgba(255,255,255,0.08);
+  --radius-card: 1.5rem;     /* 24px — all cards */
+  --radius-btn:  0.75rem;    /* 12px — all buttons */
+  --radius-pill: 99px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--text-dark);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Logo — matches nory's rounded black wordmark */
+.font-logo {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+/* ─────────────────────────────────────────────────────────
+   TYPOGRAPHY SCALE
+   ───────────────────────────────────────────────────────── */
+
+.heading-hero {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 900;
+  font-size: clamp(48px, 8vw, 84px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+}
+
+.heading-xl {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 5.5vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.heading-lg {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: clamp(26px, 3.5vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.heading-md {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 800;
+  font-size: clamp(20px, 2.5vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.heading-sm {
+  font-family: 'Figtree', sans-serif;
+  font-weight: 700;
+  font-size: clamp(16px, 1.8vw, 22px);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.body-lg  { font-size: 1.125rem; line-height: 1.65; color: var(--text-mid); }
+.body-md  { font-size: 1rem;     line-height: 1.65; color: var(--text-mid); }
+.body-sm  { font-size: 0.875rem; line-height: 1.6;  color: var(--text-mid); }
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.label-lime {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(197,232,74,0.6);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CARD SYSTEM — border-radius always var(--radius-card)
+   ───────────────────────────────────────────────────────── */
+
+.card {
+  background: white;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.card-cream {
+  background: var(--cream-2);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(26,20,17,0.06);
+  overflow: hidden;
+}
+
+.card-cream-inner {
+  background: var(--cream-3);
+  border-radius: calc(var(--radius-card) - 2px);
+  overflow: hidden;
+}
+
+.card-dark {
+  background: #111;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-dk);
+  overflow: hidden;
+}
+
+.card-burgundy {
+  background: var(--burgundy);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────
+   SECTION BACKGROUNDS
+   ───────────────────────────────────────────────────────── */
+
+.section-cream     { background: var(--cream); }
+.section-cream-2   { background: var(--cream-2); }
+.section-burgundy  { background: var(--burgundy); }
+.section-black     { background: var(--black); }
+
+/* ─────────────────────────────────────────────────────────
+   BUTTON SYSTEM
+   ───────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-btn);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-dark { background: var(--text-dark); color: white; border: none; }
+.btn-dark:hover { background: #2e2520; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-dark);
+  border: 1.5px solid rgba(26,20,17,0.22);
+}
+.btn-outline:hover { border-color: rgba(26,20,17,0.55); }
+
+.btn-outline-white {
+  background: transparent;
+  color: white;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+.btn-outline-white:hover { border-color: rgba(255,255,255,0.55); }
+
+.btn-lime { background: var(--lime); color: var(--burgundy); border: none; }
+.btn-lime:hover { background: var(--lime-hov); }
+
+.btn-green { background: var(--accent); color: var(--text-dark); border: none; }
+.btn-green:hover { background: var(--accent-hov); }
+
+/* ─────────────────────────────────────────────────────────
+   STAT BADGE
+   ───────────────────────────────────────────────────────── */
+
+.stat-badge {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #F4FEF8;
+  border: 1px solid rgba(37,211,102,0.28);
+  border-radius: 12px;
+}
+
+.stat-badge-burgundy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(197,232,74,0.12);
+  border: 1px solid rgba(197,232,74,0.25);
+  border-radius: 12px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   BENTO GRID
+   ───────────────────────────────────────────────────────── */
+
+.bento-grid { display: grid; gap: 12px; }
+.bento-full { grid-column: 1 / -1; }
+
+/* ─────────────────────────────────────────────────────────
+   MARQUEE
+   ───────────────────────────────────────────────────────── */
+
+.marquee-wrapper { overflow: hidden; display: flex; width: 100%; }
+.marquee-track {
+  display: flex;
+  animation: marquee-scroll 30s linear infinite;
+  white-space: nowrap;
+}
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─────────────────────────────────────────────────────────
+   NAV BLUR
+   ───────────────────────────────────────────────────────── */
+
+.nav-scrolled {
+  background: rgba(244,239,227,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(26,20,17,0.08);
+}
+
+/* ─────────────────────────────────────────────────────────
+   MACBOOK FRAME
+   ───────────────────────────────────────────────────────── */
+
+.macbook-outer {
+  background: linear-gradient(160deg, #D8D8DA 0%, #C4C4C6 100%);
+  border-radius: 16px 16px 0 0;
+  padding: 12px 12px 0;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.macbook-screen-bezel {
+  background: #1C1C1E;
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.macbook-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 108px;
+  height: 28px;
+  background: #1C1C1E;
+  border-radius: 0 0 14px 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.macbook-camera {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2a2a2e;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+  margin-top: 10px;
+}
+
+.macbook-display {
+  width: 100%;
+  background: white;
+  overflow: hidden;
+  border-radius: 0 0 2px 2px;
+}
+
+.macbook-chin {
+  background: linear-gradient(to bottom, #C8C8CA, #B8B8BA);
+  height: 28px;
+  border-radius: 0 0 4px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.macbook-base-body {
+  background: linear-gradient(to bottom, #C4C4C6 0%, #AEAEAF 100%);
+  height: 18px;
+  border-radius: 0 0 12px 12px;
+  margin-top: 1px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.macbook-trackpad-bar {
+  width: 28%;
+  height: 3px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 99px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   RANGE SLIDER
+   ───────────────────────────────────────────────────────── */
+
+input[type='range'] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 99px;
+  cursor: pointer;
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-dark);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px var(--text-dark);
+}
