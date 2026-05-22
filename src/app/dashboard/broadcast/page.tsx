@@ -234,7 +234,7 @@ function StepDots({ step }: { step: Step }) {
       {visible.map((_,i) => (
         <div key={i} className="rounded-full transition-all" style={{
           width: i===idx ? 20 : 6, height: 6,
-          background: i<=idx ? "var(--text-dark)" : "var(--border)",
+          background: i<=idx ? "var(--burgundy)" : "var(--border)",
         }} />
       ))}
     </div>
@@ -294,8 +294,8 @@ function CreateModal({ state, dispatch, onCreated }:
           style={{ borderBottom:"1px solid var(--border)" }}>
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center"
-              style={{ background:"rgba(37,211,102,0.1)", border:"1px solid rgba(37,211,102,0.2)" }}>
-              <Megaphone size={13} style={{ color:"var(--accent)" }} />
+              style={{ background:"rgba(56,0,8,0.07)", border:"1px solid rgba(56,0,8,0.12)" }}>
+              <Megaphone size={13} style={{ color:"var(--burgundy)" }} />
             </div>
             <p style={{ fontSize:15, fontWeight:600, color:"var(--text-dark)" }}>
               {state.step==="done" ? "Broadcast sent!" : "New broadcast"}
@@ -349,7 +349,7 @@ function CreateModal({ state, dispatch, onCreated }:
                   <p className="label">Tips</p>
                   {["Keep messages under 160 chars for best delivery","Emojis boost open rates by ~18%","Always include your brand name"].map(tip => (
                     <div key={tip} className="flex items-start gap-2">
-                      <span style={{ color:"var(--accent)", fontSize:11, marginTop:2 }}>✓</span>
+                      <span style={{ color:"var(--burgundy)", fontSize:11, marginTop:2 }}>✓</span>
                       <p className="body-sm" style={{ fontSize:12 }}>{tip}</p>
                     </div>
                   ))}
@@ -369,12 +369,12 @@ function CreateModal({ state, dispatch, onCreated }:
                       onClick={() => dispatch({ type:"SET", field:"segment", value:seg.value })}
                       className="flex items-center justify-between p-4 rounded-xl transition-all text-left"
                       style={{ background: state.segment===seg.value ? "white" : "var(--cream-2)",
-                        border:`1.5px solid ${state.segment===seg.value ? "var(--text-dark)" : "var(--border)"}`,
+                        border:`1.5px solid ${state.segment===seg.value ? "var(--burgundy)" : "var(--border)"}`,
                         cursor:"pointer" }}>
                       <div className="flex items-center gap-3">
                         <div className="w-4 h-4 rounded-full border-2 flex-shrink-0"
-                          style={{ borderColor: state.segment===seg.value ? "var(--text-dark)" : "rgba(26,20,17,0.2)",
-                            background: state.segment===seg.value ? "var(--text-dark)" : "transparent" }} />
+                          style={{ borderColor: state.segment===seg.value ? "var(--burgundy)" : "rgba(26,20,17,0.2)",
+                            background: state.segment===seg.value ? "var(--burgundy)" : "transparent" }} />
                         <span style={{ fontSize:14, color:"var(--text-dark)", fontWeight: state.segment===seg.value ? 600 : 400 }}>
                           {seg.label}
                         </span>
@@ -448,8 +448,8 @@ function CreateModal({ state, dispatch, onCreated }:
           {state.step==="sending" && (
             <div className="p-16 flex flex-col items-center gap-5">
               <div className="w-16 h-16 rounded-full flex items-center justify-center"
-                style={{ background:"rgba(37,211,102,0.1)", border:"2px solid rgba(37,211,102,0.25)" }}>
-                <Loader2 size={28} style={{ color:"var(--accent)" }} className="animate-spin" />
+                style={{ background:"rgba(56,0,8,0.07)", border:"2px solid rgba(56,0,8,0.15)" }}>
+                <Loader2 size={28} style={{ color:"var(--burgundy)" }} className="animate-spin" />
               </div>
               <div className="text-center">
                 <p className="heading-sm" style={{ color:"var(--text-dark)" }}>Sending broadcast…</p>
@@ -462,8 +462,8 @@ function CreateModal({ state, dispatch, onCreated }:
           {state.step==="done" && (
             <div className="p-16 flex flex-col items-center gap-5">
               <div className="w-16 h-16 rounded-full flex items-center justify-center"
-                style={{ background:"rgba(37,211,102,0.1)", border:"2px solid rgba(37,211,102,0.25)" }}>
-                <CheckCircle2 size={28} style={{ color:"var(--accent)" }} />
+                style={{ background:"rgba(56,0,8,0.07)", border:"2px solid rgba(56,0,8,0.15)" }}>
+                <CheckCircle2 size={28} style={{ color:"var(--burgundy)" }} />
               </div>
               <div className="text-center">
                 <p className="heading-sm" style={{ color:"var(--text-dark)" }}>

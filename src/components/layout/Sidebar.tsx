@@ -43,9 +43,9 @@ export default function Sidebar() {
       >
         <div
           className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-          style={{ background: "rgba(37,211,102,0.15)", border: "1px solid rgba(37,211,102,0.3)" }}
+          style={{ background: "rgba(56,0,8,0.08)", border: "1px solid rgba(56,0,8,0.15)" }}
         >
-          <Megaphone size={14} style={{ color: "var(--accent)" }} />
+          <Megaphone size={14} style={{ color: "var(--burgundy)" }} />
         </div>
         <span className="font-logo" style={{ fontSize: 20, color: "var(--text-dark)" }}>
           Tellero
@@ -65,9 +65,9 @@ export default function Sidebar() {
               href={isSoon ? "#" : href}
               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
               style={{
-                color:          isActive ? "var(--accent)" : "var(--text-mid)",
-                background:     isActive ? "rgba(37,211,102,0.1)" : "transparent",
-                border:         isActive ? "1px solid rgba(37,211,102,0.2)" : "1px solid transparent",
+                color:          isActive ? "var(--burgundy)" : "var(--text-mid)",
+                background:     isActive ? "rgba(56,0,8,0.07)" : "transparent",
+                border:         isActive ? "1px solid rgba(56,0,8,0.12)" : "1px solid transparent",
                 opacity:        isSoon ? 0.45 : 1,
                 pointerEvents:  isSoon ? "none" : "auto",
                 textDecoration: "none",
@@ -98,7 +98,7 @@ export default function Sidebar() {
                 </span>
               )}
               {isActive && !isSoon && (
-                <ChevronRight size={12} style={{ color: "var(--accent)", opacity: 0.7 }} />
+                <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />
               )}
             </Link>
           );
