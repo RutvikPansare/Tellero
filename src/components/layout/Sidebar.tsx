@@ -5,13 +5,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   Megaphone, Users, BarChart2, Settings,
-  LogOut, Zap, MessageSquare, ChevronRight, LayoutTemplate,
+  LogOut, Zap, MessageSquare, ChevronRight, LayoutTemplate, Target,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Broadcasts",    href: "/dashboard/broadcast",     icon: Megaphone,       badge: null   },
   { label: "Templates",     href: "/dashboard/templates",     icon: LayoutTemplate,  badge: null   },
   { label: "Contacts",      href: "/dashboard/contacts",      icon: Users,           badge: null   },
+  { label: "Segments",      href: "/dashboard/segments",      icon: Target,          badge: null   },
   { label: "Analytics",     href: "/dashboard/analytics",     icon: BarChart2,       badge: "Soon" },
   { label: "Automations",   href: "/dashboard/automations",   icon: Zap,             badge: "Soon" },
   { label: "Conversations", href: "/dashboard/conversations", icon: MessageSquare,   badge: "Soon" },

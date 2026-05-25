@@ -188,6 +188,87 @@ export interface Database {
           approved_at?: string | null
         }
       }
+      tags: {
+        Row: {
+          id:            string
+          user_id:       string
+          name:          string
+          color:         string
+          contact_count: number
+          created_at:    string
+        }
+        Insert: {
+          id?:            string
+          user_id:        string
+          name:           string
+          color?:         string
+          contact_count?: number
+          created_at?:    string
+        }
+        Update: {
+          id?:            string
+          user_id?:       string
+          name?:          string
+          color?:         string
+          contact_count?: number
+          created_at?:    string
+        }
+      }
+      contact_tags: {
+        Row: {
+          contact_id: string
+          tag_id:     string
+          created_at: string
+        }
+        Insert: {
+          contact_id: string
+          tag_id:     string
+          created_at?: string
+        }
+        Update: {
+          contact_id?: string
+          tag_id?:     string
+          created_at?: string
+        }
+      }
+      segments: {
+        Row: {
+          id:                 string
+          user_id:            string
+          name:               string
+          description:        string | null
+          filters:            Json
+          conjunction:        'AND' | 'OR'
+          contact_count:      number
+          last_calculated_at: string | null
+          created_at:         string
+          updated_at:         string
+        }
+        Insert: {
+          id?:                 string
+          user_id:             string
+          name:                string
+          description?:        string | null
+          filters?:            Json
+          conjunction?:        'AND' | 'OR'
+          contact_count?:      number
+          last_calculated_at?: string | null
+          created_at?:         string
+          updated_at?:         string
+        }
+        Update: {
+          id?:                 string
+          user_id?:            string
+          name?:               string
+          description?:        string | null
+          filters?:            Json
+          conjunction?:        'AND' | 'OR'
+          contact_count?:      number
+          last_calculated_at?: string | null
+          created_at?:         string
+          updated_at?:         string
+        }
+      }
     }
     Views: {
       [_ in never]: never
