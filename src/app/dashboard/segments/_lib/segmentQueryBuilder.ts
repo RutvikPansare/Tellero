@@ -4,7 +4,8 @@
  * Converts a FilterCondition[] into a Supabase PostgREST query on `contacts`.
  *
  * Filter types:
- *  • tag / not_tag  — join contact_tags to find contacts that have (or lack) a tag
+ *  • tag        — !inner join contact_tags; correctly returns only contacts with the tag
+ *  • not_tag    — two-step: fetch IDs with the tag, then exclude them (best accuracy)
  *  • total_orders   — integer comparison on contacts.total_orders
  *  • total_spent    — numeric comparison on contacts.total_spent
  *  • last_order_at  — date/relative-date comparison on contacts.last_order_at
@@ -12,21 +13,26 @@
  *  • attribute      — JSONB key/value filter using PostgREST arrow syntax
  *
  * Conjunction:
- *  • AND — each filter is chained as an additional .filter() call (default Supabase AND)
- *  • OR  — filters are combined via a single .or() call with comma-separated conditions
+ *  • AND — each filter is chained as an additional .filter() call (default AND)
+ *  • OR  — scalar filters combined via .or(); tag filters fall back to AND
  *
- * NOTE: tag/not_tag filters with OR conjunction are best-effort — Supabase doesn't
- * support OR across joined relationships natively, so they fall back to AND.
+ * !inner note: when any "tag" (has-tag) filter is present we switch the
+ * contact_tags join to !inner so PostgREST returns only contacts that have at
+ * least one matching row — a plain LEFT JOIN would return all contacts regardless.
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FilterCondition } from "@/types/segments";
 
-const BASE_SELECT = `
-  id, name, phone, total_orders, total_spent,
-  last_order_at, first_order_at, attributes,
-  contact_tags ( tag:tags ( id, name, color ) )
-`.trim();
+function buildSelect(filters: FilterCondition[]): string {
+  // Use !inner when we need to positively filter by tag so PostgREST only
+  // returns contacts that actually have a matching contact_tags row.
+  const needsInner = filters.some(f => f.field === "tag");
+  const joinClause = needsInner
+    ? "contact_tags!inner ( tag:tags ( id, name, color ) )"
+    : "contact_tags ( tag:tags ( id, name, color ) )";
+  return `id, name, phone, total_orders, total_spent, last_order_at, first_order_at, attributes, ${joinClause}`;
+}
 
 /** Build and execute a segment preview query. Returns { count, data }. */
 export async function buildSegmentQuery(
@@ -35,28 +41,54 @@ export async function buildSegmentQuery(
   filters:     FilterCondition[],
   conjunction: "AND" | "OR"
 ) {
+  if (filters.length === 0) {
+    return (supabase as any)
+      .from("contacts")
+      .select(buildSelect(filters), { count: "exact" })
+      .eq("user_id", userId)
+      .limit(100);
+  }
+
+  // ── not_tag pre-fetch ──────────────────────────────────────
+  // PostgREST cannot express NOT EXISTS in a single query, so we resolve the
+  // excluded contact_id set first and pass it as a NOT IN list.
+  const notTagFilters = filters.filter(f => f.field === "not_tag");
+  let excludedIds: string[] = [];
+  if (notTagFilters.length > 0) {
+    for (const f of notTagFilters) {
+      const { data } = await (supabase as any)
+        .from("contact_tags")
+        .select("contact_id")
+        .eq("tag_id", f.value as string);
+      if (data) excludedIds = [...excludedIds, ...(data as { contact_id: string }[]).map(r => r.contact_id)];
+    }
+  }
+
   let query = (supabase as any)
     .from("contacts")
-    .select(BASE_SELECT, { count: "exact" })
+    .select(buildSelect(filters), { count: "exact" })
     .eq("user_id", userId)
     .limit(100);
 
-  if (filters.length === 0) return query;
+  // Exclude contacts that have any of the not_tag tags
+  if (excludedIds.length > 0) {
+    query = query.not("id", "in", `(${excludedIds.join(",")})`);
+  }
 
   if (conjunction === "AND") {
     for (const filter of filters) {
-      query = applyFilter(query, filter);
+      if (filter.field !== "not_tag") query = applyFilter(query, filter);
     }
   } else {
     // OR: build PostgREST or() string for scalar filters
-    // tag/not_tag filters must still be ANDed (limitation of join filtering)
+    // tag filters must still be ANDed (PostgREST join limitation)
     const scalarConds: string[] = [];
     for (const filter of filters) {
+      if (filter.field === "not_tag") continue; // already handled above
       const cond = buildScalarCondition(filter);
       if (cond) {
         scalarConds.push(cond);
       } else {
-        // tag filters always AND
         query = applyFilter(query, filter);
       }
     }
@@ -72,12 +104,13 @@ export async function buildSegmentQuery(
 function applyFilter(query: any, filter: FilterCondition): any {
   switch (filter.field) {
     case "tag":
-      // Has tag: inner-join on contact_tags where tag_id matches
+      // Has tag: the select already uses !inner join; filter on the nested column
+      // so PostgREST returns only contacts with a matching contact_tags row.
       return query.eq("contact_tags.tag_id", filter.value as string);
 
     case "not_tag":
-      // Doesn't have tag: NOT inner-join — PostgREST neq on join
-      return query.neq("contact_tags.tag_id", filter.value as string);
+      // Handled via pre-fetch exclusion in buildSegmentQuery; skip here.
+      return query;
 
     case "total_orders":
       return applyNumeric(query, "total_orders", filter);

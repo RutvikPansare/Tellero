@@ -38,10 +38,6 @@ export function useContacts(): UseContactsReturn {
     setError(null);
 
     const supabase = createClient();
-    const db = supabase as unknown as {
-      from: (t: string) => unknown;
-      auth:  typeof supabase.auth;
-    };
 
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -49,12 +45,15 @@ export function useContacts(): UseContactsReturn {
 
       const offset = page * PAGE_SIZE;
 
-      let q = (db as any)
+      // Use !inner join when filtering by tag so PostgREST returns only contacts
+      // that have a matching contact_tags row (plain LEFT JOIN returns everyone).
+      const joinClause = tagFilter
+        ? "contact_tags!inner ( tag:tags ( id, name, color ) )"
+        : "contact_tags ( tag:tags ( id, name, color ) )";
+
+      let q = (supabase as any)
         .from("contacts")
-        .select(
-          `*, contact_tags ( tag:tags ( id, name, color ) )`,
-          { count: "exact" }
-        )
+        .select(`*, ${joinClause}`, { count: "exact" })
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .range(offset, offset + PAGE_SIZE - 1);
