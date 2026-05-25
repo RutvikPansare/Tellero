@@ -1,9 +1,10 @@
-import { Tag, Upload } from "lucide-react";
+import { Tag, Upload, Loader2 } from "lucide-react";
 import type { ContactWithTags } from "@/types/segments";
 
 interface Props {
   contacts:      ContactWithTags[];
   totalCount:    number;
+  importing?:    boolean;
   onManageTags:  () => void;
   onImport:      () => void;
 }
@@ -23,7 +24,7 @@ function StatCard({ label, value, sub, accent }: {
   );
 }
 
-export function ContactsHeader({ contacts, totalCount, onManageTags, onImport }: Props) {
+export function ContactsHeader({ contacts, totalCount, importing, onManageTags, onImport }: Props) {
   const tagged        = contacts.filter(c => c.contact_tags.length > 0).length;
   const taggedPct     = totalCount > 0 ? Math.round(tagged / totalCount * 100) : 0;
 
@@ -58,15 +59,22 @@ export function ContactsHeader({ contacts, totalCount, onManageTags, onImport }:
           <button
             type="button"
             onClick={onImport}
+            disabled={importing}
             style={{
               display: "flex", alignItems: "center", gap: 6,
               padding: "9px 18px", borderRadius: 10, fontSize: 13, fontWeight: 700,
-              border: "none", background: "var(--text-dark)", color: "white", cursor: "pointer",
+              border: "none", background: "var(--text-dark)", color: "white",
+              cursor: importing ? "not-allowed" : "pointer",
+              opacity: importing ? 0.7 : 1,
             }}
-            onMouseOver={e=>(e.currentTarget.style.opacity="0.85")}
-            onMouseOut={e =>(e.currentTarget.style.opacity="1")}>
-            <Upload size={13} /> Import CSV
+            onMouseOver={e=>{ if (!importing) e.currentTarget.style.opacity="0.85"; }}
+            onMouseOut={e =>{ if (!importing) e.currentTarget.style.opacity="1"; }}>
+            {importing
+              ? <><Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /> Importing…</>
+              : <><Upload size={13} /> Import CSV</>
+            }
           </button>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
 
