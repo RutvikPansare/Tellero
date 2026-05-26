@@ -4,28 +4,25 @@ import { motion } from "framer-motion";
 
 const plans = [
   {
-    name: "Free Forever",
-    price: "₹0",
-    desc: "Start selling smarter, zero risk.",
-    features: ["100 messages/month","Basic broadcast","Contact import","WhatsApp Business API"],
-    cta: "Start free",
+    name: "Free Tier",
+    price: "TBD",
+    desc: "A zero-risk entry tier, planned for launch.",
+    features: ["100 messages/month", "Basic broadcast", "Contact import", "WhatsApp Business API"],
     highlight: false,
   },
   {
     name: "Starter",
-    price: "₹799",
-    desc: "Everything you need to start automating revenue.",
-    features: ["500 msgs included","All automations free","Unlimited agents","AI support bot","COD confirmation","Abandoned cart recovery","Reorder reminders"],
-    cta: "Start free trial",
+    price: "TBD",
+    desc: "Full automation suite for D2C brands, coming soon.",
+    features: ["500 msgs included", "All automations free", "Unlimited agents", "AI support bot", "COD confirmation", "Abandoned cart recovery", "Reorder reminders"],
     highlight: true,
     badge: "Most popular",
   },
   {
     name: "Growth",
-    price: "₹1,299",
-    desc: "For brands scaling fast and tracking every rupee.",
-    features: ["2,000 msgs included","Everything in Starter","Revenue dashboard","Customer health scores","RTO risk scoring","Priority support"],
-    cta: "Start free trial",
+    price: "TBD",
+    desc: "For brands scaling fast — revenue analytics and AI scoring.",
+    features: ["2,000 msgs included", "Everything in Starter", "Revenue dashboard", "Customer health scores", "RTO risk scoring", "Priority support"],
     highlight: false,
   },
 ];
@@ -43,10 +40,11 @@ export default function Pricing() {
         >
           <p className="label-lime mb-4">Pricing</p>
           <h2 className="heading-xl text-white mb-4">
-            Priced for D2C brands from day one.
+            Priced to earn your trust first.
           </h2>
           <p className="body-lg max-w-md mx-auto" style={{ color: "rgba(255,255,255,0.35)" }}>
-            No hidden fees. No per-agent costs. No markup above 14%.
+            We&apos;re still finalising pricing with our early cohort. Join the waitlist
+            and help us get it right — beta access is free.
           </p>
         </motion.div>
 
@@ -58,9 +56,7 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className={`relative flex flex-col gap-6 p-7 ${
-                plan.highlight ? "" : ""
-              }`}
+              className="relative flex flex-col gap-6 p-7"
               style={{
                 borderRadius: "var(--radius-card)",
                 background: plan.highlight ? "var(--lime)" : "rgba(255,255,255,0.05)",
@@ -88,20 +84,23 @@ export default function Pricing() {
                 >
                   {plan.name}
                 </p>
-                <div className="flex items-baseline gap-1 mb-2">
+
+                {/* TBD price badge */}
+                <div className="flex items-baseline gap-2 mb-2">
                   <span
-                    className="heading-xl"
-                    style={{ color: plan.highlight ? "var(--burgundy)" : "white", lineHeight: 1 }}
+                    className="inline-flex items-center px-3 py-1 font-bold"
+                    style={{
+                      fontSize: 13,
+                      background: plan.highlight ? "rgba(56,0,8,0.1)" : "rgba(255,255,255,0.1)",
+                      color: plan.highlight ? "var(--burgundy)" : "rgba(255,255,255,0.6)",
+                      borderRadius: "var(--radius-pill)",
+                      letterSpacing: "0.06em",
+                    }}
                   >
-                    {plan.price}
-                  </span>
-                  <span
-                    className="body-sm"
-                    style={{ color: plan.highlight ? "rgba(56,0,8,0.4)" : "rgba(255,255,255,0.28)" }}
-                  >
-                    /month
+                    Pricing TBD
                   </span>
                 </div>
+
                 <p
                   className="body-sm"
                   style={{ color: plan.highlight ? "rgba(56,0,8,0.55)" : "rgba(255,255,255,0.35)" }}
@@ -126,20 +125,33 @@ export default function Pricing() {
               </ul>
 
               <a
-                href="#"
+                href="#waitlist"
                 className="btn mt-auto"
                 style={{
                   background: plan.highlight ? "var(--burgundy)" : "rgba(255,255,255,0.08)",
-                  color: plan.highlight ? "white" : "white",
+                  color: "white",
                   border: plan.highlight ? "none" : "1px solid rgba(255,255,255,0.12)",
                   borderRadius: "var(--radius-btn)",
+                  textDecoration: "none",
                 }}
               >
-                {plan.cta}
+                Join the waitlist
               </a>
             </motion.div>
           ))}
         </div>
+
+        {/* Bottom note */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-center mt-10 body-sm"
+          style={{ color: "rgba(255,255,255,0.22)" }}
+        >
+          Pricing will be set collaboratively with our first 50 customers. Early members lock in the lowest rate.
+        </motion.p>
       </div>
     </section>
   );

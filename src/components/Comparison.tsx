@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 
 const features = [
-  { label: "Price",              tellero: "₹799/mo",     aisensy: "₹1,500/mo",   quickreply: "₹2,999/mo", botspace: "₹999/mo"    },
+  { label: "Price",              tellero: "TBD",          aisensy: "₹1,500/mo",   quickreply: "₹2,999/mo", botspace: "₹999/mo"    },
   { label: "COD confirmation",   tellero: true,          aisensy: false,          quickreply: true,         botspace: false        },
   { label: "Reorder reminders",  tellero: true,          aisensy: false,          quickreply: false,        botspace: false        },
   { label: "Win-back campaigns", tellero: true,          aisensy: false,          quickreply: false,        botspace: false        },
-  { label: "AI customer bot",    tellero: "Free",        aisensy: "₹2,500 extra", quickreply: false,        botspace: "₹10/res."   },
+  { label: "AI customer bot",    tellero: true,          aisensy: "₹2,500 extra", quickreply: false,        botspace: "₹10/res."   },
   { label: "Unlimited agents",   tellero: true,          aisensy: "₹750/agent",  quickreply: false,        botspace: false        },
   { label: "Hindi UI",           tellero: true,          aisensy: false,          quickreply: false,        botspace: false        },
   { label: "Revenue dashboard",  tellero: true,          aisensy: false,          quickreply: false,        botspace: false        },

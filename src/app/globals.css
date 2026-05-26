@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@700;800;900&family=Nunito:wght@900&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@700;800;900&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -40,11 +40,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Logo — matches nory's rounded black wordmark */
+/* Logo wordmark */
 .font-logo {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Figtree', sans-serif;
   font-weight: 900;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -329,6 +329,193 @@ body {
   height: 3px;
   background: rgba(0,0,0,0.12);
   border-radius: 99px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   DASHBOARD — Dark theme utility classes
+   Used by /dashboard/* routes only. Additive — no conflict
+   with landing page cream tokens.
+   ───────────────────────────────────────────────────────── */
+
+.dash-bg      { background: #0A0A0A; }
+.dash-surface { background: #111111; }
+.dash-elevated{ background: #1A1A1A; }
+
+.dash-card {
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: 14px;
+}
+
+.dash-card-hover {
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: 14px;
+  transition: border-color 0.2s;
+}
+.dash-card-hover:hover { border-color: #363636; }
+
+.dash-input {
+  background: #1A1A1A;
+  border: 1px solid #2E2E2E;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-input::placeholder { color: rgba(255,255,255,0.25); }
+.dash-input:focus { border-color: #25D366; }
+
+.dash-textarea {
+  background: #1A1A1A;
+  border: 1px solid #2E2E2E;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  padding: 12px 14px;
+  width: 100%;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+}
+.dash-textarea::placeholder { color: rgba(255,255,255,0.25); }
+.dash-textarea:focus { border-color: #25D366; }
+
+.dash-select {
+  background: #1A1A1A;
+  border: 1px solid #2E2E2E;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 14px;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-select:focus { border-color: #25D366; }
+
+.dash-btn-primary {
+  background: #25D366;
+  color: #0A0A0A;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-btn-primary:hover { background: #1DB954; }
+.dash-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.dash-btn-secondary {
+  background: #1A1A1A;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #2E2E2E;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-btn-secondary:hover { background: #222; border-color: #3E3E3E; color: #fff; }
+
+.dash-btn-ghost {
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-btn-ghost:hover { background: #1A1A1A; color: #fff; }
+
+.dash-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.dash-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.35);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Sidebar nav item */
+.dash-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.dash-nav-item:hover { background: #1A1A1A; color: rgba(255,255,255,0.85); }
+.dash-nav-item.active { background: rgba(37,211,102,0.1); color: #25D366; }
+
+/* WhatsApp message preview bubble */
+.whatsapp-bubble {
+  background: #005C4B;
+  color: #fff;
+  border-radius: 12px 12px 0 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 280px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.dash-skeleton {
+  background: linear-gradient(90deg, #1A1A1A 25%, #222 50%, #1A1A1A 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
 }
 
 /* ─────────────────────────────────────────────────────────

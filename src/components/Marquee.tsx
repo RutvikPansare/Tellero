@@ -11,7 +11,7 @@ export default function Marquee() {
   return (
     <section className="section-cream-2 py-14 border-y" style={{ borderColor: "rgba(26,20,17,0.07)" }}>
       <p className="label text-center mb-10">
-        Trusted by India&apos;s fastest-growing D2C brands
+        Built for brands like these
       </p>
       <div className="marquee-wrapper">
         <div className="marquee-track">

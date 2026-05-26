@@ -110,12 +110,12 @@ export default function ROICalculator() {
                 ₹{results.total.toLocaleString("en-IN")}
               </p>
               <p className="body-sm mt-2" style={{ color: "rgba(255,255,255,0.35)" }}>
-                vs ₹799/month = {results.roi}% ROI
+                estimated monthly value for your store
               </p>
             </div>
 
-            <a href="#" className="btn btn-lime mt-auto">
-              Calculate my ROI →
+            <a href="#waitlist" className="btn btn-lime mt-auto">
+              Join the waitlist →
             </a>
           </div>
         </motion.div>

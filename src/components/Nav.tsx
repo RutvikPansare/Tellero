@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -21,7 +22,7 @@ export default function Nav() {
 
         {/* Nav links */}
         <ul className="hidden md:flex items-center gap-8">
-          {[["Product","#features"],["Pricing","#pricing"],["Compare","#compare"],["Reports","#reports"],["Blog","#"]].map(([label, href]) => (
+          {[["Product","#features"],["Pricing","#pricing"],["Compare","#compare"],["Reports","#reports"],["Waitlist","#waitlist"]].map(([label, href]) => (
             <li key={label}>
               <a href={href} className="body-sm font-medium hover:opacity-100 transition-opacity" style={{ color: "var(--text-mid)", opacity: 0.9, textDecoration: "none" }}>
                 {label}
@@ -32,11 +33,11 @@ export default function Nav() {
 
         {/* CTAs */}
         <div className="flex items-center gap-3">
-          <a href="#" className="btn btn-outline hidden sm:inline-flex" style={{ padding: "10px 20px", fontSize: 13 }}>
+          <Link href="/login" className="btn btn-outline hidden sm:inline-flex" style={{ padding: "10px 20px", fontSize: 13 }}>
             Login
-          </a>
-          <a href="#" className="btn btn-dark" style={{ padding: "10px 20px", fontSize: 13 }}>
-            Start for free
+          </Link>
+          <a href="#waitlist" className="btn btn-dark" style={{ padding: "10px 20px", fontSize: 13 }}>
+            Join waitlist
           </a>
         </div>
       </div>
