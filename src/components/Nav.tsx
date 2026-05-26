@@ -21,7 +21,7 @@ export default function Nav() {
 
         {/* Nav links */}
         <ul className="hidden md:flex items-center gap-8">
-          {[["Product","#features"],["Pricing","#pricing"],["Compare","#compare"],["Blog","#"]].map(([label, href]) => (
+          {[["Product","#features"],["Pricing","#pricing"],["Compare","#compare"],["Reports","#reports"],["Blog","#"]].map(([label, href]) => (
             <li key={label}>
               <a href={href} className="body-sm font-medium hover:opacity-100 transition-opacity" style={{ color: "var(--text-mid)", opacity: 0.9, textDecoration: "none" }}>
                 {label}
