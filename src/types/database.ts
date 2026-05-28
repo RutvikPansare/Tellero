@@ -20,6 +20,7 @@ export interface Database {
           plan: 'free' | 'starter' | 'growth' | 'scale'
           waba_id: string | null
           meta_access_token: string | null
+          cod_settings: Json | null
         }
         Insert: {
           id: string
@@ -31,6 +32,7 @@ export interface Database {
           plan?: 'free' | 'starter' | 'growth' | 'scale'
           waba_id?: string | null
           meta_access_token?: string | null
+          cod_settings?: Json | null
         }
         Update: {
           id?: string
@@ -42,6 +44,7 @@ export interface Database {
           plan?: 'free' | 'starter' | 'growth' | 'scale'
           waba_id?: string | null
           meta_access_token?: string | null
+          cod_settings?: Json | null
         }
       }
       broadcasts: {
@@ -510,7 +513,7 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          event_type: 'cod_confirmation' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          event_type: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
           order_id: string | null
           checkout_id: string | null
           contact_id: string | null
@@ -528,7 +531,7 @@ export interface Database {
         Insert: {
           id?: string
           user_id: string
-          event_type: 'cod_confirmation' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          event_type: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
           order_id?: string | null
           checkout_id?: string | null
           contact_id?: string | null
@@ -546,7 +549,7 @@ export interface Database {
         Update: {
           id?: string
           user_id?: string
-          event_type?: 'cod_confirmation' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          event_type?: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
           order_id?: string | null
           checkout_id?: string | null
           contact_id?: string | null
@@ -560,6 +563,53 @@ export interface Database {
           error_message?: string | null
           retry_count?: number
           created_at?: string
+        }
+      }
+      cod_confirmations: {
+        Row: {
+          id: string
+          user_id: string
+          order_id: string | null
+          automation_queue_id: string | null
+          customer_phone: string
+          status: 'pending' | 'confirmed' | 'cancelled' | 'no_reply' | 'failed'
+          customer_reply: string | null
+          shopify_order_cancelled: boolean
+          sent_at: string
+          replied_at: string | null
+          resolved_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          order_id?: string | null
+          automation_queue_id?: string | null
+          customer_phone: string
+          status?: 'pending' | 'confirmed' | 'cancelled' | 'no_reply' | 'failed'
+          customer_reply?: string | null
+          shopify_order_cancelled?: boolean
+          sent_at?: string
+          replied_at?: string | null
+          resolved_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          order_id?: string | null
+          automation_queue_id?: string | null
+          customer_phone?: string
+          status?: 'pending' | 'confirmed' | 'cancelled' | 'no_reply' | 'failed'
+          customer_reply?: string | null
+          shopify_order_cancelled?: boolean
+          sent_at?: string
+          replied_at?: string | null
+          resolved_at?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
     }

@@ -48,6 +48,18 @@ export class ShopifyClient {
     const query = new URLSearchParams(params as Record<string, string>)
     return this.request(`/orders.json?${query}`)
   }
+
+  // Cancels a Shopify order. Called when a customer replies NO or timeout fires with on_no_reply=cancel.
+  async cancelOrder(shopifyOrderId: string): Promise<void> {
+    await this.request(`/orders/${shopifyOrderId}/cancel.json`, {
+      method: 'POST',
+      body: JSON.stringify({
+        reason: 'customer',
+        email: false,
+        refund: {},
+      }),
+    })
+  }
 }
 
 export async function getShopifyClientForUser(

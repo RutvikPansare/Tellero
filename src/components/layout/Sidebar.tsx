@@ -14,7 +14,7 @@ const NAV_ITEMS = [
   { label: "Contacts",      href: "/dashboard/contacts",      icon: Users,           badge: null   },
   { label: "Segments",      href: "/dashboard/segments",      icon: Target,          badge: null   },
   { label: "Analytics",     href: "/dashboard/analytics",     icon: BarChart2,       badge: "Soon" },
-  { label: "Automations",   href: "/dashboard/automations",   icon: Zap,             badge: "Soon" },
+  { label: "Automations",   href: "/dashboard/automations",   icon: Zap,             badge: null   },
   { label: "Inbox",         href: "/dashboard/inbox",         icon: MessageSquare,   badge: null   },
 ];
 
