@@ -269,12 +269,237 @@ export interface Database {
           updated_at?:         string
         }
       }
+      shopify_connections: {
+        Row: {
+          id: string
+          user_id: string
+          shop_domain: string
+          access_token: string
+          scope: string | null
+          webhook_ids: Record<string, number>
+          is_active: boolean
+          installed_at: string
+          last_webhook_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          shop_domain: string
+          access_token: string
+          scope?: string | null
+          webhook_ids?: Record<string, number>
+          is_active?: boolean
+          installed_at?: string
+          last_webhook_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          shop_domain?: string
+          access_token?: string
+          scope?: string | null
+          webhook_ids?: Record<string, number>
+          is_active?: boolean
+          installed_at?: string
+          last_webhook_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      orders: {
+        Row: {
+          id: string
+          user_id: string
+          shopify_order_id: string
+          shopify_order_number: string | null
+          contact_id: string | null
+          customer_phone: string | null
+          customer_name: string | null
+          customer_email: string | null
+          total_price: number
+          currency: string
+          payment_gateway: string | null
+          financial_status: string | null
+          fulfillment_status: string | null
+          line_items: Json[]
+          shipping_address: Json | null
+          tracking_number: string | null
+          tracking_url: string | null
+          cancel_reason: string | null
+          shopify_created_at: string | null
+          shopify_updated_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          shopify_order_id: string
+          shopify_order_number?: string | null
+          contact_id?: string | null
+          customer_phone?: string | null
+          customer_name?: string | null
+          customer_email?: string | null
+          total_price?: number
+          currency?: string
+          payment_gateway?: string | null
+          financial_status?: string | null
+          fulfillment_status?: string | null
+          line_items?: Json[]
+          shipping_address?: Json | null
+          tracking_number?: string | null
+          tracking_url?: string | null
+          cancel_reason?: string | null
+          shopify_created_at?: string | null
+          shopify_updated_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          shopify_order_id?: string
+          shopify_order_number?: string | null
+          contact_id?: string | null
+          customer_phone?: string | null
+          customer_name?: string | null
+          customer_email?: string | null
+          total_price?: number
+          currency?: string
+          payment_gateway?: string | null
+          financial_status?: string | null
+          fulfillment_status?: string | null
+          line_items?: Json[]
+          shipping_address?: Json | null
+          tracking_number?: string | null
+          tracking_url?: string | null
+          cancel_reason?: string | null
+          shopify_created_at?: string | null
+          shopify_updated_at?: string | null
+          created_at?: string
+        }
+      }
+      abandoned_checkouts: {
+        Row: {
+          id: string
+          user_id: string
+          shopify_checkout_id: string
+          contact_id: string | null
+          customer_phone: string | null
+          customer_name: string | null
+          customer_email: string | null
+          total_price: number
+          line_items: Json[]
+          abandoned_checkout_url: string | null
+          recovered: boolean
+          recovered_at: string | null
+          shopify_created_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          shopify_checkout_id: string
+          contact_id?: string | null
+          customer_phone?: string | null
+          customer_name?: string | null
+          customer_email?: string | null
+          total_price?: number
+          line_items?: Json[]
+          abandoned_checkout_url?: string | null
+          recovered?: boolean
+          recovered_at?: string | null
+          shopify_created_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          shopify_checkout_id?: string
+          contact_id?: string | null
+          customer_phone?: string | null
+          customer_name?: string | null
+          customer_email?: string | null
+          total_price?: number
+          line_items?: Json[]
+          abandoned_checkout_url?: string | null
+          recovered?: boolean
+          recovered_at?: string | null
+          shopify_created_at?: string | null
+          created_at?: string
+        }
+      }
+      automation_queue: {
+        Row: {
+          id: string
+          user_id: string
+          event_type: 'cod_confirmation' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          order_id: string | null
+          checkout_id: string | null
+          contact_id: string | null
+          scheduled_for: string
+          status: 'pending' | 'processing' | 'sent' | 'cancelled' | 'failed'
+          template_name: string | null
+          template_variables: Record<string, string>
+          recipient_phone: string
+          whatsapp_message_id: string | null
+          sent_at: string | null
+          error_message: string | null
+          retry_count: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          event_type: 'cod_confirmation' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          order_id?: string | null
+          checkout_id?: string | null
+          contact_id?: string | null
+          scheduled_for: string
+          status?: 'pending' | 'processing' | 'sent' | 'cancelled' | 'failed'
+          template_name?: string | null
+          template_variables?: Record<string, string>
+          recipient_phone: string
+          whatsapp_message_id?: string | null
+          sent_at?: string | null
+          error_message?: string | null
+          retry_count?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          event_type?: 'cod_confirmation' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          order_id?: string | null
+          checkout_id?: string | null
+          contact_id?: string | null
+          scheduled_for?: string
+          status?: 'pending' | 'processing' | 'sent' | 'cancelled' | 'failed'
+          template_name?: string | null
+          template_variables?: Record<string, string>
+          recipient_phone?: string
+          whatsapp_message_id?: string | null
+          sent_at?: string | null
+          error_message?: string | null
+          retry_count?: number
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_contact_orders: {
+        Args: { p_contact_id: string; p_order_value: number; p_order_date: string }
+        Returns: void
+      }
+      mark_checkout_recovered: {
+        Args: { p_user_id: string; p_customer_phone: string }
+        Returns: void
+      }
     }
     Enums: {
       template_status:   'draft' | 'pending' | 'approved' | 'rejected' | 'paused'
