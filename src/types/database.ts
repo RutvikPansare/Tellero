@@ -21,6 +21,7 @@ export interface Database {
           waba_id: string | null
           meta_access_token: string | null
           cod_settings: Json | null
+          abandoned_cart_settings: Json | null
         }
         Insert: {
           id: string
@@ -33,6 +34,7 @@ export interface Database {
           waba_id?: string | null
           meta_access_token?: string | null
           cod_settings?: Json | null
+          abandoned_cart_settings?: Json | null
         }
         Update: {
           id?: string
@@ -45,6 +47,7 @@ export interface Database {
           waba_id?: string | null
           meta_access_token?: string | null
           cod_settings?: Json | null
+          abandoned_cart_settings?: Json | null
         }
       }
       broadcasts: {
@@ -398,6 +401,8 @@ export interface Database {
           abandoned_checkout_url: string | null
           recovered: boolean
           recovered_at: string | null
+          recovery_revenue: number | null
+          message_sent_at: string | null
           shopify_created_at: string | null
           created_at: string
         }
@@ -414,6 +419,8 @@ export interface Database {
           abandoned_checkout_url?: string | null
           recovered?: boolean
           recovered_at?: string | null
+          recovery_revenue?: number | null
+          message_sent_at?: string | null
           shopify_created_at?: string | null
           created_at?: string
         }
@@ -430,6 +437,8 @@ export interface Database {
           abandoned_checkout_url?: string | null
           recovered?: boolean
           recovered_at?: string | null
+          recovery_revenue?: number | null
+          message_sent_at?: string | null
           shopify_created_at?: string | null
           created_at?: string
         }
@@ -513,7 +522,7 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          event_type: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          event_type: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'abandoned_cart_reminder_2' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
           order_id: string | null
           checkout_id: string | null
           contact_id: string | null
@@ -531,7 +540,7 @@ export interface Database {
         Insert: {
           id?: string
           user_id: string
-          event_type: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          event_type: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'abandoned_cart_reminder_2' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
           order_id?: string | null
           checkout_id?: string | null
           contact_id?: string | null
@@ -549,7 +558,7 @@ export interface Database {
         Update: {
           id?: string
           user_id?: string
-          event_type?: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
+          event_type?: 'cod_confirmation' | 'cod_timeout' | 'abandoned_cart' | 'abandoned_cart_reminder_2' | 'order_confirmed' | 'order_shipped' | 'order_cancelled' | 'reorder_reminder' | 'win_back'
           order_id?: string | null
           checkout_id?: string | null
           contact_id?: string | null

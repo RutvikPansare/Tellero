@@ -66,6 +66,39 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true })
   }
 
+  // Minimum cart value check — skip test/empty carts
+  const MIN_CART_VALUE = 100
+  if (parseFloat(checkout.total_price ?? '0') < MIN_CART_VALUE) {
+    return NextResponse.json({ ok: true })
+  }
+
+  // Fetch brand's abandoned cart settings for the configured delay
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('abandoned_cart_settings')
+    .eq('id', userId)
+    .single()
+
+  const acSettings = {
+    enabled: true,
+    delay_minutes: 60,
+    ...((profile?.abandoned_cart_settings ?? {}) as { enabled?: boolean; delay_minutes?: number }),
+  }
+
+  if (!acSettings.enabled) {
+    return NextResponse.json({ ok: true })
+  }
+
+  // Cancel any existing pending abandoned cart automation for this phone
+  // (customer abandoned again — only send for the latest cart)
+  await (supabase as any)
+    .from('automation_queue')
+    .update({ status: 'cancelled' })
+    .eq('user_id', userId)
+    .in('event_type', ['abandoned_cart', 'abandoned_cart_reminder_2'])
+    .eq('recipient_phone', normalizedPhone)
+    .eq('status', 'pending')
+
   const { data: contact } = await supabase
     .from('contacts')
     .select('id')
@@ -73,9 +106,9 @@ export async function POST(request: NextRequest) {
     .eq('phone', normalizedPhone)
     .single()
 
-  // Schedule abandoned cart automation 1 hour from now
+  // Schedule abandoned cart automation using the configured delay
   const scheduledFor = new Date()
-  scheduledFor.setHours(scheduledFor.getHours() + 1)
+  scheduledFor.setMinutes(scheduledFor.getMinutes() + acSettings.delay_minutes)
 
   await supabase.from('automation_queue').insert({
     user_id: userId,

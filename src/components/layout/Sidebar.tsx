@@ -9,25 +9,39 @@ import {
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { label: "Broadcasts",    href: "/dashboard/broadcast",     icon: Megaphone,       badge: null   },
-  { label: "Templates",     href: "/dashboard/templates",     icon: LayoutTemplate,  badge: null   },
-  { label: "Contacts",      href: "/dashboard/contacts",      icon: Users,           badge: null   },
-  { label: "Segments",      href: "/dashboard/segments",      icon: Target,          badge: null   },
-  { label: "Analytics",     href: "/dashboard/analytics",     icon: BarChart2,       badge: "Soon" },
-  { label: "Automations",   href: "/dashboard/automations",   icon: Zap,             badge: null   },
-  { label: "Inbox",         href: "/dashboard/inbox",         icon: MessageSquare,   badge: null   },
+  { label: "Broadcasts",  href: "/dashboard/broadcast",   icon: Megaphone,      badge: null   },
+  { label: "Templates",   href: "/dashboard/templates",   icon: LayoutTemplate, badge: null   },
+  { label: "Contacts",    href: "/dashboard/contacts",    icon: Users,          badge: null   },
+  { label: "Segments",    href: "/dashboard/segments",    icon: Target,         badge: null   },
+  { label: "Analytics",   href: "/dashboard/analytics",   icon: BarChart2,      badge: "Soon" },
+  { label: "Inbox",       href: "/dashboard/inbox",       icon: MessageSquare,  badge: null   },
+];
+
+const AUTOMATION_ITEMS = [
+  { label: "COD Confirmation", href: "/dashboard/automations/cod" },
+  { label: "Abandoned Cart",   href: "/dashboard/automations/abandoned-cart" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router   = useRouter();
   const supabase = createClient();
+  const onAutomations = pathname.startsWith("/dashboard/automations");
 
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.push("/login");
     router.refresh();
   }
+
+  const linkStyle = (active: boolean, soon = false) => ({
+    color:          active ? "var(--burgundy)" : "var(--text-mid)",
+    background:     active ? "rgba(56,0,8,0.07)" : "transparent",
+    border:         active ? "1px solid rgba(56,0,8,0.12)" : "1px solid transparent",
+    opacity:        soon ? 0.45 : 1,
+    pointerEvents:  soon ? "none" as const : "auto" as const,
+    textDecoration: "none",
+  });
 
   return (
     <aside
@@ -66,45 +80,59 @@ export default function Sidebar() {
               key={href}
               href={isSoon ? "#" : href}
               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-              style={{
-                color:          isActive ? "var(--burgundy)" : "var(--text-mid)",
-                background:     isActive ? "rgba(56,0,8,0.07)" : "transparent",
-                border:         isActive ? "1px solid rgba(56,0,8,0.12)" : "1px solid transparent",
-                opacity:        isSoon ? 0.45 : 1,
-                pointerEvents:  isSoon ? "none" : "auto",
-                textDecoration: "none",
-              }}
-              onMouseOver={(e) => {
-                if (!isActive && !isSoon) {
-                  e.currentTarget.style.background = "var(--cream-3)";
-                  e.currentTarget.style.color = "var(--text-dark)";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!isActive && !isSoon) {
-                  e.currentTarget.style.background = "transparent";
-                  e.currentTarget.style.color = "var(--text-mid)";
-                }
-              }}
+              style={linkStyle(isActive, isSoon)}
+              onMouseOver={(e) => { if (!isActive && !isSoon) { e.currentTarget.style.background = "var(--cream-3)"; e.currentTarget.style.color = "var(--text-dark)"; } }}
+              onMouseOut={(e)  => { if (!isActive && !isSoon) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-mid)"; } }}
             >
               <Icon size={15} />
               <span className="flex-1">{label}</span>
               {badge && (
-                <span style={{
-                  fontSize: 9, fontWeight: 700, letterSpacing: "0.08em",
-                  textTransform: "uppercase", background: "var(--cream-3)",
-                  color: "var(--text-muted)", padding: "2px 6px",
-                  borderRadius: 99, border: "1px solid var(--border)",
-                }}>
+                <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", background: "var(--cream-3)", color: "var(--text-muted)", padding: "2px 6px", borderRadius: 99, border: "1px solid var(--border)" }}>
                   {badge}
                 </span>
               )}
-              {isActive && !isSoon && (
-                <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />
-              )}
+              {isActive && !isSoon && <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />}
             </Link>
           );
         })}
+
+        {/* Automations group with sub-nav */}
+        <Link
+          href="/dashboard/automations/cod"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+          style={linkStyle(onAutomations)}
+          onMouseOver={(e) => { if (!onAutomations) { e.currentTarget.style.background = "var(--cream-3)"; e.currentTarget.style.color = "var(--text-dark)"; } }}
+          onMouseOut={(e)  => { if (!onAutomations) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-mid)"; } }}
+        >
+          <Zap size={15} />
+          <span className="flex-1">Automations</span>
+          {onAutomations && <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />}
+        </Link>
+
+        {/* Sub-items — always visible so users can jump between automations */}
+        <div className="flex flex-col gap-0.5 ml-4 pl-3" style={{ borderLeft: "2px solid var(--border)" }}>
+          {AUTOMATION_ITEMS.map(({ label, href }) => {
+            const isActive = pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-all"
+                style={{
+                  fontSize: 13,
+                  fontWeight: isActive ? 600 : 400,
+                  color:  isActive ? "var(--burgundy)" : "var(--text-muted)",
+                  background: isActive ? "rgba(56,0,8,0.05)" : "transparent",
+                  textDecoration: "none",
+                }}
+                onMouseOver={(e) => { if (!isActive) { e.currentTarget.style.color = "var(--text-dark)"; e.currentTarget.style.background = "var(--cream-3)"; } }}
+                onMouseOut={(e)  => { if (!isActive) { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; } }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </div>
       </nav>
 
       {/* Bottom */}

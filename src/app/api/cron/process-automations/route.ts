@@ -68,11 +68,14 @@ async function processQueue(request: NextRequest) {
         continue
       }
 
-      // ── Abandoned cart: skip if customer already purchased ─────────────────
-      if (automation.event_type === 'abandoned_cart' && automation.checkout_id) {
-        const { data: checkout } = await supabase
+      // ── Abandoned cart: verify customer hasn't purchased before sending ────
+      if (
+        (automation.event_type === 'abandoned_cart' || automation.event_type === 'abandoned_cart_reminder_2') &&
+        automation.checkout_id
+      ) {
+        const { data: checkout } = await (supabase as any)
           .from('abandoned_checkouts')
-          .select('recovered')
+          .select('recovered, customer_phone, shopify_created_at, total_price')
           .eq('id', automation.checkout_id)
           .single()
 
@@ -82,6 +85,32 @@ async function processQueue(request: NextRequest) {
             .update({ status: 'cancelled' })
             .eq('id', automation.id)
           continue
+        }
+
+        // Belt-and-suspenders: check orders table directly for a matching order
+        // created after the checkout was created (catches race conditions)
+        if (checkout?.customer_phone && checkout?.shopify_created_at) {
+          const { data: matchingOrder } = await (supabase as any)
+            .from('orders')
+            .select('id')
+            .eq('user_id', automation.user_id)
+            .eq('customer_phone', checkout.customer_phone)
+            .gt('shopify_created_at', checkout.shopify_created_at)
+            .limit(1)
+            .maybeSingle()
+
+          if (matchingOrder) {
+            // Customer purchased — mark checkout recovered and cancel automation
+            await (supabase as any)
+              .from('abandoned_checkouts')
+              .update({ recovered: true, recovered_at: new Date().toISOString(), recovery_revenue: checkout.total_price })
+              .eq('id', automation.checkout_id)
+            await (supabase as any)
+              .from('automation_queue')
+              .update({ status: 'cancelled' })
+              .eq('id', automation.id)
+            continue
+          }
         }
       }
 
@@ -121,6 +150,17 @@ async function processQueue(request: NextRequest) {
           ...((profile as any).cod_settings ?? {}),
         }
         await createCODConfirmationAndScheduleTimeout(supabase, automation, codSettings)
+      }
+
+      // ── After abandoned cart sent: stamp message_sent_at on the checkout ───
+      if (
+        (automation.event_type === 'abandoned_cart' || automation.event_type === 'abandoned_cart_reminder_2') &&
+        automation.checkout_id
+      ) {
+        await (supabase as any)
+          .from('abandoned_checkouts')
+          .update({ message_sent_at: new Date().toISOString() })
+          .eq('id', automation.checkout_id)
       }
 
       processed++
@@ -263,13 +303,14 @@ async function handleCODTimeout(
 
 function getTemplateName(eventType: string): string {
   const map: Record<string, string> = {
-    cod_confirmation: 'cod_confirmation',
-    abandoned_cart:   'abandoned_cart_recovery',
-    order_confirmed:  'order_confirmation',
-    order_shipped:    'shipping_update',
-    order_cancelled:  'order_cancelled',
-    reorder_reminder: 'reorder_reminder',
-    win_back:         'win_back',
+    cod_confirmation:          'cod_confirmation',
+    abandoned_cart:            'abandoned_cart_recovery',
+    abandoned_cart_reminder_2: 'abandoned_cart_reminder_2',
+    order_confirmed:           'order_confirmation',
+    order_shipped:             'shipping_update',
+    order_cancelled:           'order_cancelled',
+    reorder_reminder:          'reorder_reminder',
+    win_back:                  'win_back',
   }
   return map[eventType] ?? eventType
 }

@@ -139,10 +139,30 @@ export async function POST(request: NextRequest) {
 
   // Mark abandoned checkouts as recovered if this customer had one
   if (customerPhone) {
+    const normalizedPhone = normalizeIndianPhone(customerPhone)
     await supabase.rpc('mark_checkout_recovered', {
       p_user_id: userId,
-      p_customer_phone: normalizeIndianPhone(customerPhone),
+      p_customer_phone: normalizedPhone,
     })
+
+    // Set recovery_revenue on the newly-recovered checkout
+    await supabase
+      .from('abandoned_checkouts')
+      .update({ recovery_revenue: parseFloat(order.total_price) })
+      .eq('user_id', userId)
+      .eq('customer_phone', normalizedPhone)
+      .eq('recovered', true)
+      .is('recovery_revenue', null)
+
+    // Cancel any pending abandoned cart automations so the customer doesn't
+    // receive a recovery message after they've already purchased
+    await (supabase as any)
+      .from('automation_queue')
+      .update({ status: 'cancelled' })
+      .eq('user_id', userId)
+      .in('event_type', ['abandoned_cart', 'abandoned_cart_reminder_2'])
+      .eq('recipient_phone', normalizedPhone)
+      .eq('status', 'pending')
   }
 
   await supabase
