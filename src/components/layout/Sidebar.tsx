@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { label: "Segments",      href: "/dashboard/segments",      icon: Target,          badge: null   },
   { label: "Analytics",     href: "/dashboard/analytics",     icon: BarChart2,       badge: "Soon" },
   { label: "Automations",   href: "/dashboard/automations",   icon: Zap,             badge: "Soon" },
-  { label: "Conversations", href: "/dashboard/conversations", icon: MessageSquare,   badge: "Soon" },
+  { label: "Inbox",         href: "/dashboard/inbox",         icon: MessageSquare,   badge: null   },
 ];
 
 export default function Sidebar() {

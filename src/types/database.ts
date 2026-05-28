@@ -431,6 +431,81 @@ export interface Database {
           created_at?: string
         }
       }
+      conversations: {
+        Row: {
+          id: string
+          user_id: string
+          contact_id: string | null
+          customer_phone: string
+          customer_name: string | null
+          status: 'open' | 'assigned' | 'resolved'
+          assigned_to: string | null
+          last_message_at: string | null
+          last_message_preview: string | null
+          unread_count: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          contact_id?: string | null
+          customer_phone: string
+          customer_name?: string | null
+          status?: 'open' | 'assigned' | 'resolved'
+          assigned_to?: string | null
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          unread_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          contact_id?: string | null
+          customer_phone?: string
+          customer_name?: string | null
+          status?: 'open' | 'assigned' | 'resolved'
+          assigned_to?: string | null
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          unread_count?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          id: string
+          conversation_id: string
+          direction: 'inbound' | 'outbound'
+          body: string
+          meta_message_id: string | null
+          status: 'sent' | 'delivered' | 'read' | 'failed'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          conversation_id: string
+          direction: 'inbound' | 'outbound'
+          body: string
+          meta_message_id?: string | null
+          status?: 'sent' | 'delivered' | 'read' | 'failed'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          conversation_id?: string
+          direction?: 'inbound' | 'outbound'
+          body?: string
+          meta_message_id?: string | null
+          status?: 'sent' | 'delivered' | 'read' | 'failed'
+          created_at?: string
+        }
+        Relationships: []
+      }
       automation_queue: {
         Row: {
           id: string
