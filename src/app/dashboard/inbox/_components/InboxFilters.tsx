@@ -17,7 +17,16 @@ const TABS: Array<{ key: InboxFilter; label: string }> = [
 
 export function InboxFilters({ active, counts, onChange }: InboxFiltersProps) {
   return (
-    <div style={{ display: 'flex', gap: 6, padding: '10px 12px', borderBottom: '1px solid var(--border)' }}>
+    <div style={{
+      display:    'flex',
+      gap:        4,
+      padding:    '8px 8px',
+      borderBottom: '1px solid var(--border)',
+      overflowX:  'auto',
+      scrollbarWidth: 'none',
+      WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
+      flexShrink: 0,
+    }}>
       {TABS.map(({ key, label }) => {
         const isActive = active === key
         return (
@@ -27,8 +36,8 @@ export function InboxFilters({ active, counts, onChange }: InboxFiltersProps) {
             style={{
               display:        'flex',
               alignItems:     'center',
-              gap:            5,
-              padding:        '4px 10px',
+              gap:            4,
+              padding:        '4px 8px',
               borderRadius:   99,
               border:         '1.5px solid',
               borderColor:    isActive ? 'var(--burgundy)' : 'var(--border)',
@@ -38,6 +47,7 @@ export function InboxFilters({ active, counts, onChange }: InboxFiltersProps) {
               fontWeight:     isActive ? 700 : 500,
               cursor:         'pointer',
               whiteSpace:     'nowrap',
+              flexShrink:     0,
               transition:     'all 0.15s',
             }}
           >
@@ -48,8 +58,8 @@ export function InboxFilters({ active, counts, onChange }: InboxFiltersProps) {
               background:  isActive ? 'var(--burgundy)' : 'var(--border)',
               color:       isActive ? 'white' : 'var(--text-muted)',
               borderRadius: 99,
-              padding:     '1px 6px',
-              minWidth:    18,
+              padding:     '1px 5px',
+              minWidth:    16,
               textAlign:   'center',
             }}>
               {counts[key]}

@@ -30,13 +30,11 @@ export default function InboxPage() {
   }
 
   return (
-    <div style={{ display: 'flex', flex: 1, overflow: 'hidden', height: '100%' }}>
-      <InboxLayout
-        userId={userId}
-        activeId={activeId}
-        onSelect={setActiveId}
-        onConversationUpdated={handleConversationUpdated}
-      />
-    </div>
+    <InboxLayout
+      userId={userId}
+      activeId={activeId}
+      onSelect={setActiveId}
+      onConversationUpdated={handleConversationUpdated}
+    />
   )
 }
