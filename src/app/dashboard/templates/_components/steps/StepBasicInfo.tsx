@@ -27,7 +27,7 @@ export function StepBasicInfo({ state, dispatch }: {
   const { errors } = state;
 
   return (
-    <div style={{ padding:"24px", display:"flex", flexDirection:"column", gap:22 }}>
+    <div style={{ flex: 1, padding: "24px", display: "flex", flexDirection: "column", gap: 22, overflowY: "auto" }}>
 
       {/* Template name */}
       <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
