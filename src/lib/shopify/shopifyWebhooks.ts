@@ -30,7 +30,7 @@ async function registerWebhook(
   topic: string
 ): Promise<number> {
   // orders/create → orders-create, checkouts/create → checkouts-create, app/uninstalled → app-uninstalled
-  const urlSlug = topic.replace('/', 's-').replace(/\//g, '-')
+  const urlSlug = topic.replace(/\//g, '-')
   const address = `${process.env.NEXT_PUBLIC_APP_URL}/api/shopify/webhooks/${urlSlug}`
 
   const response = await fetch(
