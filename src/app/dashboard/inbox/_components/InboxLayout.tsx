@@ -18,9 +18,9 @@ export function InboxLayout({ userId, activeId, onSelect, onConversationUpdated 
 
   return (
     <div style={{ display: 'flex', flex: 1, overflow: 'hidden', height: '100%' }}>
-      {/* Left panel — conversation list, fixed 320px */}
+      {/* Left panel — conversation list, fixed 360px */}
       <div style={{
-        width:       320,
+        width:       360,
         flexShrink:  0,
         borderRight: '1px solid var(--border)',
         background:  'white',
