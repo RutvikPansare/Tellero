@@ -27,8 +27,8 @@ export function ShopifyOrderStats({ connection }: ShopifyOrderStatsProps) {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const sb = supabase as any
+      // Cast to any since new tables aren't in the generated types yet
+      const sb = supabase as any // eslint-disable-line
 
       const [ordersResult, automationsResult, lastOrderResult] = await Promise.all([
         sb.from('orders').select('payment_gateway', { count: 'exact' }).eq('user_id', user.id),
