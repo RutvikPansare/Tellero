@@ -11,6 +11,8 @@ interface UseContactTagsReturn {
   addTag:     (contactId: string, tagId: string) => Promise<void>;
   removeTag:  (contactId: string, tagId: string) => Promise<void>;
   createTag:  (name: string, color: string) => Promise<Tag>;
+  renameTag:  (tagId: string, name: string) => Promise<void>;
+  deleteTag:  (tagId: string) => Promise<void>;
   refetchTags:() => void;
 }
 
@@ -82,5 +84,25 @@ export function useContactTags(): UseContactTagsReturn {
     return data as Tag;
   }
 
-  return { allTags, loading, error, addTag, removeTag, createTag, refetchTags };
+  async function renameTag(tagId: string, name: string): Promise<void> {
+    const supabase = createClient();
+    const { error: dbErr } = await (supabase as any)
+      .from("tags")
+      .update({ name })
+      .eq("id", tagId);
+    if (dbErr) throw new Error(dbErr.message);
+    refetchTags();
+  }
+
+  async function deleteTag(tagId: string): Promise<void> {
+    const supabase = createClient();
+    const { error: dbErr } = await (supabase as any)
+      .from("tags")
+      .delete()
+      .eq("id", tagId);
+    if (dbErr) throw new Error(dbErr.message);
+    refetchTags();
+  }
+
+  return { allTags, loading, error, addTag, removeTag, createTag, renameTag, deleteTag, refetchTags };
 }

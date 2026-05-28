@@ -2,13 +2,14 @@
 
 import { useState, useCallback, useRef } from "react";
 import { Search, X } from "lucide-react";
-import { ContactsHeader }  from "./_components/ContactsHeader";
-import { ContactsTable }   from "./_components/ContactsTable";
-import { ContactDrawer }   from "./_components/ContactDrawer";
-import { BulkActionBar }   from "./_components/BulkActionBar";
-import { useContacts }     from "./_hooks/useContacts";
-import { useContactTags }  from "./_hooks/useContactTags";
-import { createClient }    from "@/lib/supabase/client";
+import { ContactsHeader }    from "./_components/ContactsHeader";
+import { ContactsTable }     from "./_components/ContactsTable";
+import { ContactDrawer }     from "./_components/ContactDrawer";
+import { BulkActionBar }     from "./_components/BulkActionBar";
+import { ManageTagsModal }   from "./_components/ManageTagsModal";
+import { useContacts }       from "./_hooks/useContacts";
+import { useContactTags }    from "./_hooks/useContactTags";
+import { createClient }      from "@/lib/supabase/client";
 
 /* ── CSV helpers ──────────────────────────────────────────────── */
 
@@ -52,10 +53,11 @@ function parseCsv(text: string): Record<string, string>[] {
 /* ─────────────────────────────────────────────────────────────── */
 
 export default function ContactsPage() {
-  const [openId,      setOpenId]      = useState<string | null>(null);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [importMsg,   setImportMsg]   = useState<{ text: string; ok: boolean } | null>(null);
-  const [importing,   setImporting]   = useState(false);
+  const [openId,        setOpenId]        = useState<string | null>(null);
+  const [selectedIds,   setSelectedIds]   = useState<Set<string>>(new Set());
+  const [importMsg,     setImportMsg]     = useState<{ text: string; ok: boolean } | null>(null);
+  const [importing,     setImporting]     = useState(false);
+  const [tagsModalOpen, setTagsModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -63,7 +65,7 @@ export default function ContactsPage() {
     searchQuery, setSearchQuery, refetch,
   } = useContacts();
 
-  const { allTags, addTag, removeTag } = useContactTags();
+  const { allTags, addTag, removeTag, createTag, renameTag, deleteTag, refetchTags } = useContactTags();
 
   /* ── Selection helpers ──────────────────────────────────── */
   const toggleSelect = useCallback((id: string, checked: boolean) => {
@@ -184,7 +186,7 @@ export default function ContactsPage() {
         contacts={contacts}
         totalCount={totalCount}
         importing={importing}
-        onManageTags={() => {/* TODO: open tags management modal */}}
+        onManageTags={() => setTagsModalOpen(true)}
         onImport={() => fileInputRef.current?.click()}
       />
 
@@ -264,6 +266,16 @@ export default function ContactsPage() {
         onDelete={bulkDelete}
         onClear={() => setSelectedIds(new Set())}
       />
+
+      {tagsModalOpen && (
+        <ManageTagsModal
+          tags={allTags}
+          onClose={() => setTagsModalOpen(false)}
+          onCreate={async (name, color) => { const t = await createTag(name, color); refetchTags(); return t; }}
+          onRename={renameTag}
+          onDelete={deleteTag}
+        />
+      )}
     </div>
   );
 }
