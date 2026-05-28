@@ -36,7 +36,8 @@ export default function AbandonedCartPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col gap-6">
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col gap-6">
       <div>
         <h1 className="font-bold" style={{ fontSize: 22, color: 'var(--text-dark)', margin: 0 }}>
           Abandoned Cart Recovery
@@ -63,10 +64,11 @@ export default function AbandonedCartPage() {
       </div>
 
       <AbandonedCartLog
-        checkouts={checkouts}
-        loading={logLoading}
-        error={logError}
-      />
+          checkouts={checkouts}
+          loading={logLoading}
+          error={logError}
+        />
+      </div>
     </div>
   )
 }

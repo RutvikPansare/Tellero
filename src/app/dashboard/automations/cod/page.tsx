@@ -32,7 +32,8 @@ export default function CODPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col gap-6">
+    <div className="flex-1 overflow-y-auto">
+      <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col gap-6">
       {/* Page header */}
       <div>
         <h1 className="font-bold" style={{ fontSize: 22, color: 'var(--text-dark)', margin: 0 }}>
@@ -62,10 +63,11 @@ export default function CODPage() {
 
       {/* Confirmation log */}
       <CODConfirmationLog
-        confirmations={confirmations}
-        loading={logLoading}
-        error={logError}
-      />
+          confirmations={confirmations}
+          loading={logLoading}
+          error={logError}
+        />
+      </div>
     </div>
   )
 }
