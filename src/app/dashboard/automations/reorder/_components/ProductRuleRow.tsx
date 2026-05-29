@@ -58,8 +58,11 @@ export function ProductRuleRow({ rule, shopifyProducts, takenProductIds, onUpdat
             outline: 'none', cursor: 'pointer',
           }}
         >
-          {!productExists && (
-            <option value={rule.product_id}>[Deleted product]</option>
+          {/* Placeholder for new blank rules or missing products */}
+          {(!productExists || rule.product_title === 'Select product') && (
+            <option value={rule.product_id} disabled>
+              {shopifyProducts.length === 0 ? '— Connect Shopify to select —' : '— Select product —'}
+            </option>
           )}
           {shopifyProducts
             .filter(p => p.id === rule.product_id || !takenProductIds.includes(p.id))

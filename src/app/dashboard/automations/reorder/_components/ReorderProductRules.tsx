@@ -36,7 +36,7 @@ export function ReorderProductRules({
 
       <button
         onClick={onAdd}
-        disabled={productsLoading || shopifyProducts.length === 0}
+        disabled={productsLoading}
         className="flex items-center gap-2 self-start"
         style={{
           padding: '6px 14px', borderRadius: 10, fontSize: 13, fontWeight: 500,
@@ -53,7 +53,11 @@ export function ReorderProductRules({
 
       {shopifyProducts.length === 0 && !productsLoading && (
         <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-          Connect your Shopify store in Settings → Shopify to enable product rules.
+          No Shopify products found. Connect your store in{' '}
+          <a href="/dashboard/settings/shopify" style={{ color: 'var(--brand-dark)', fontWeight: 600 }}>
+            Settings → Shopify
+          </a>{' '}
+          to enable product-specific rules.
         </p>
       )}
     </div>

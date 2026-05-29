@@ -67,17 +67,14 @@ export function ReorderSettingsCard({
   }
 
   const handleAddRule = useCallback(() => {
+    // Find the first product not already in rules; fall back to a blank entry
     const firstAvailable = shopifyProducts.find(
       p => !current.product_rules.some(r => r.product_id === p.id)
     )
-    if (!firstAvailable) return
-    const newRule: ProductRule = {
-      product_id:    firstAvailable.id,
-      product_title: firstAvailable.title,
-      reminder_days: current.default_reminder_days,
-      enabled:       true,
-    }
-    // Update draft locally (no save yet)
+    const newRule: ProductRule = firstAvailable
+      ? { product_id: firstAvailable.id, product_title: firstAvailable.title, reminder_days: current.default_reminder_days, enabled: true }
+      : { product_id: `custom_${Date.now()}`, product_title: 'Select product', reminder_days: current.default_reminder_days, enabled: true }
+
     setDraft(prev => {
       const base = prev ?? settings
       return { ...base, product_rules: [...base.product_rules, newRule] }
