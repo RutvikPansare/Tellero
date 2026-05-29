@@ -575,7 +575,7 @@ export default function BroadcastPage() {
             <div className="overflow-x-auto">
               <table className="w-full" style={{ borderCollapse:"collapse" }}>
                 <thead>
-                  <tr style={{ borderBottom:"1px solid var(--border)", background:"var(--cream)" }}>
+                  <tr style={{ borderBottom:"1px solid var(--border)", background:"white" }}>
                     {["Broadcast","Status","Segment","Recipients","Delivered","Opened","Date",""].map((h,i) => (
                       <th key={h+i} className={`px-5 py-3 ${["Recipients","Delivered","Opened","Date",""].includes(h) ? "text-right" : "text-left"}`}
                         style={{ fontSize:11, fontWeight:600, letterSpacing:"0.08em", color:"var(--text-muted)", textTransform:"uppercase" }}>

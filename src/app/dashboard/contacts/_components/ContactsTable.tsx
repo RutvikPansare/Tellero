@@ -47,7 +47,7 @@ export function ContactsTable({
     <div style={{ overflowX: "auto", background: "white", border: "1px solid var(--border)", borderRadius: 14 }}>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
-          <tr style={{ borderBottom: "1px solid var(--border)", background: "var(--cream)" }}>
+          <tr style={{ borderBottom: "1px solid var(--border)", background: "white" }}>
             <th style={{ ...thStyle, width: 44 }}>
               <input
                 type="checkbox"
