@@ -62,7 +62,7 @@ export function canUseFeature(plan: PlanName, feature: keyof PlanLimits): boolea
 
 export const PLAN_DISPLAY: Record<PlanName, { label: string; price: string; priceNum: number; color: string; bg: string }> = {
   free:    { label: 'Free Plan',    price: 'Free',         priceNum: 0,    color: '#6B7280', bg: 'rgba(107,114,128,0.08)' },
-  starter: { label: 'Starter Plan', price: '₹999/month',  priceNum: 999,  color: '#16A34A', bg: 'rgba(34,197,94,0.08)' },
+  starter: { label: 'Starter Plan', price: '₹899/month',  priceNum: 899,  color: '#16A34A', bg: 'rgba(34,197,94,0.08)' },
   growth:  { label: 'Growth Plan',  price: '₹1,799/month', priceNum: 1799, color: '#2563EB', bg: 'rgba(59,130,246,0.08)' },
   scale:   { label: 'Scale Plan',   price: '₹2,999/month', priceNum: 2999, color: '#8B5CF6', bg: 'rgba(139,92,246,0.08)' },
 }
