@@ -23,6 +23,7 @@ export interface Database {
           cod_settings: Json | null
           abandoned_cart_settings: Json | null
           order_notification_settings: Json | null
+          reorder_settings: Json | null
         }
         Insert: {
           id: string
@@ -37,6 +38,7 @@ export interface Database {
           cod_settings?: Json | null
           abandoned_cart_settings?: Json | null
           order_notification_settings?: Json | null
+          reorder_settings?: Json | null
         }
         Update: {
           id?: string
@@ -51,6 +53,7 @@ export interface Database {
           cod_settings?: Json | null
           abandoned_cart_settings?: Json | null
           order_notification_settings?: Json | null
+          reorder_settings?: Json | null
         }
       }
       broadcasts: {
@@ -117,6 +120,8 @@ export interface Database {
           total_spent: number
           health_score: number
           opted_in: boolean
+          marketing_opted_out: boolean
+          opted_out_at: string | null
         }
         Insert: {
           id?: string
@@ -131,6 +136,8 @@ export interface Database {
           total_spent?: number
           health_score?: number
           opted_in?: boolean
+          marketing_opted_out?: boolean
+          opted_out_at?: string | null
         }
         Update: {
           id?: string
@@ -145,6 +152,8 @@ export interface Database {
           total_spent?: number
           health_score?: number
           opted_in?: boolean
+          marketing_opted_out?: boolean
+          opted_out_at?: string | null
         }
       }
       templates: {

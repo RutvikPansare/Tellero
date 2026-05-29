@@ -87,3 +87,18 @@ export type ShopifyWebhookTopic =
   | 'orders/cancelled'
   | 'checkouts/create'
   | 'app/uninstalled'
+
+export interface ShopifyProductVariant {
+  id: number
+  title: string
+  inventory_quantity: number
+  price: string
+  sku: string | null
+}
+
+export interface ShopifyProduct {
+  id: number
+  title: string
+  status: 'active' | 'archived' | 'draft'
+  variants: ShopifyProductVariant[]
+}

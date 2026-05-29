@@ -83,6 +83,89 @@ function detectCODReply(messageBody: string): 'yes' | 'no' | null {
   return null
 }
 
+// ─── Marketing opt-out detection ─────────────────────────────────────────────
+
+// Case-insensitive exact-match or prefix-match on these keywords.
+// Covers English and common Hindi/Hinglish phrasing.
+const OPT_OUT_KEYWORDS = [
+  'stop', 'unsubscribe', 'optout', 'opt out',
+  'band karo', 'mat bhejo', 'nahi chahiye',
+]
+const RESUBSCRIBE_KEYWORDS = ['start', 'subscribe', 'opt in', 'optin']
+
+function detectOptOut(text: string): 'opt_out' | 'resubscribe' | null {
+  const normalized = text.trim().toLowerCase()
+  if (OPT_OUT_KEYWORDS.some(k => normalized === k)) return 'opt_out'
+  if (RESUBSCRIBE_KEYWORDS.some(k => normalized === k)) return 'resubscribe'
+  return null
+}
+
+// Handle a customer opting out of marketing messages.
+// - Updates contacts table
+// - Cancels all pending marketing automations for this phone
+// - Sends acknowledgement message
+// Does NOT route to inbox — fully automated, no agent needed.
+async function handleOptOut(
+  supabase: AdminClient,
+  userId: string,
+  phone: string,
+  profile: { waba_id: string | null; meta_access_token: string | null }
+): Promise<void> {
+  // Update contacts: mark opted out
+  await (supabase as any)
+    .from('contacts')
+    .update({ marketing_opted_out: true, opted_out_at: new Date().toISOString() })
+    .eq('user_id', userId)
+    .eq('phone', phone)
+
+  // Cancel all pending marketing automations for this contact's phone.
+  // Deliberately excludes transactional types (order_confirmed, order_shipped, cod_*).
+  await (supabase as any)
+    .from('automation_queue')
+    .update({ status: 'cancelled' })
+    .eq('user_id', userId)
+    .eq('recipient_phone', phone)
+    .eq('status', 'pending')
+    .in('event_type', ['reorder_reminder', 'win_back', 'abandoned_cart', 'abandoned_cart_reminder_2'])
+
+  // Acknowledge the opt-out
+  if (profile.waba_id && profile.meta_access_token) {
+    await sendWhatsAppText({
+      wabaId:      profile.waba_id,
+      accessToken: profile.meta_access_token,
+      to:          phone,
+      text:        "You've been unsubscribed from marketing messages. You'll still receive order updates. Reply START to resubscribe.",
+    })
+  }
+
+  console.log(`[meta/webhook] Opt-out processed for user ${userId} phone ${phone}`)
+}
+
+// Handle a customer re-subscribing to marketing messages.
+async function handleResubscribe(
+  supabase: AdminClient,
+  userId: string,
+  phone: string,
+  profile: { waba_id: string | null; meta_access_token: string | null }
+): Promise<void> {
+  await (supabase as any)
+    .from('contacts')
+    .update({ marketing_opted_out: false, opted_out_at: null })
+    .eq('user_id', userId)
+    .eq('phone', phone)
+
+  if (profile.waba_id && profile.meta_access_token) {
+    await sendWhatsAppText({
+      wabaId:      profile.waba_id,
+      accessToken: profile.meta_access_token,
+      to:          phone,
+      text:        "You're back! You'll receive product reminders and offers again. 🎉",
+    })
+  }
+
+  console.log(`[meta/webhook] Resubscribe processed for user ${userId} phone ${phone}`)
+}
+
 // Send a free-text WhatsApp reply (within 24h of customer's inbound message — always safe here)
 async function sendWhatsAppText(params: {
   wabaId: string
@@ -378,6 +461,34 @@ async function handleInboundMessage(
     }
   }
   // ── End COD interception — falls through to normal inbox handling ─────────
+
+  // ── Marketing opt-out / resubscribe interception ──────────────────────────
+  const optOutAction = detectOptOut(body)
+  if (optOutAction) {
+    const { data: profileForOptOut } = await (supabase as any)
+      .from('profiles')
+      .select('waba_id, meta_access_token')
+      .eq('id', userId)
+      .single()
+
+    if (optOutAction === 'opt_out') {
+      await handleOptOut(supabase, userId, phone, profileForOptOut ?? {})
+    } else {
+      // Only resubscribe if they were actually opted out — check first
+      const { data: contactCheck } = await (supabase as any)
+        .from('contacts')
+        .select('marketing_opted_out')
+        .eq('user_id', userId)
+        .eq('phone', phone)
+        .maybeSingle()
+      if (contactCheck?.marketing_opted_out) {
+        await handleResubscribe(supabase, userId, phone, profileForOptOut ?? {})
+      }
+      // If not opted out, fall through to inbox (START might be a legitimate message)
+    }
+    if (optOutAction === 'opt_out') return // don't create inbox thread for opt-outs
+  }
+  // ── End opt-out interception ───────────────────────────────────────────────
 
 
   const { data: contact } = await supabase

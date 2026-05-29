@@ -117,7 +117,7 @@ async function processQueue(request: NextRequest) {
       // ── Get brand's WhatsApp credentials ───────────────────────────────────
       const { data: profile } = await supabase
         .from('profiles')
-        .select('waba_id, meta_access_token, whatsapp_number, cod_settings, abandoned_cart_settings, order_notification_settings')
+        .select('waba_id, meta_access_token, whatsapp_number, cod_settings, abandoned_cart_settings, order_notification_settings, reorder_settings')
         .eq('id', automation.user_id)
         .single()
 
@@ -156,6 +156,18 @@ async function processQueue(request: NextRequest) {
       if (automation.event_type === 'order_shipped') {
         const orderSettings = (profile as any).order_notification_settings ?? {}
         if (!orderSettings.shipping_update_enabled) {
+          await (supabase as any)
+            .from('automation_queue')
+            .update({ status: 'cancelled' })
+            .eq('id', automation.id)
+          continue
+        }
+      }
+
+      // ── Reorder reminder: pre-send checks ─────────────────────────────────
+      if (automation.event_type === 'reorder_reminder') {
+        const cancelled = await checkReorderReminder(supabase, automation, profile)
+        if (cancelled) {
           await (supabase as any)
             .from('automation_queue')
             .update({ status: 'cancelled' })
@@ -336,6 +348,114 @@ async function handleCODTimeout(
       }
     }
   }
+}
+
+// ── Reorder reminder pre-send checks ─────────────────────────────────────────
+// Returns true if the reminder should be cancelled (customer already reordered,
+// product out of stock, or customer opted out). Never throws — optional checks
+// fail open so a Shopify API timeout doesn't block the automation.
+
+async function checkReorderReminder(
+  supabase: AdminClient,
+  // eslint-disable-line
+  automation: any,
+  // eslint-disable-line
+  profile: any
+): Promise<boolean> {
+  const { source_order_id, source_product_id, recipient_phone, user_id } = automation
+
+  // ── Check 1: Has customer already reordered this product? ─────────────────
+  if (source_order_id && source_product_id) {
+    // Get the source order's created date as our baseline
+    const { data: sourceOrder } = await (supabase as any)
+      .from('orders')
+      .select('shopify_created_at')
+      .eq('id', source_order_id)
+      .maybeSingle()
+
+    if (sourceOrder?.shopify_created_at) {
+      // Check orders table: same brand + customer + product ordered after source
+      // Uses JSONB containment to check if any line_item has this product_id.
+      // Syntax: line_items @> '[{"product_id": "12345"}]'::jsonb
+      const { data: reorder } = await (supabase as any)
+        .from('orders')
+        .select('id')
+        .eq('user_id', user_id)
+        .eq('customer_phone', recipient_phone)
+        .gt('shopify_created_at', sourceOrder.shopify_created_at)
+        .filter('line_items', 'cs', JSON.stringify([{ product_id: source_product_id }]))
+        .limit(1)
+        .maybeSingle()
+
+      if (reorder) {
+        console.log(`[cron] reorder_reminder ${automation.id}: customer already reordered product ${source_product_id} — cancelling`)
+        return true
+      }
+    }
+  }
+
+  // ── Check 2: Is the product still active and in stock? ────────────────────
+  if (source_product_id) {
+    try {
+      const shopifyClient = await getShopifyClientForUser(supabase, user_id)
+      if (shopifyClient) {
+        const { product } = await shopifyClient.getProduct(source_product_id)
+        const inStock = product.status === 'active' &&
+          product.variants.some(v => v.inventory_quantity > 0)
+        if (!inStock) {
+          console.log(`[cron] reorder_reminder ${automation.id}: product ${source_product_id} out of stock or inactive — cancelling`)
+          return true
+        }
+      }
+    } catch (err) {
+      // Don't block on Shopify API failure — log and proceed
+      console.error(`[cron] reorder_reminder ${automation.id}: Shopify stock check failed (proceeding):`, err)
+    }
+  }
+
+  // ── Check 3: Has customer opted out of marketing? ─────────────────────────
+  const { data: contact } = await (supabase as any)
+    .from('contacts')
+    .select('marketing_opted_out')
+    .eq('user_id', user_id)
+    .eq('phone', recipient_phone)
+    .maybeSingle()
+
+  if (contact?.marketing_opted_out) {
+    console.log(`[cron] reorder_reminder ${automation.id}: contact opted out — cancelling`)
+    return true
+  }
+
+  // ── Check 4: Send time window (IST) ───────────────────────────────────────
+  // Only send between 09:00 and 20:00 IST to respect customer hours.
+  // IST = UTC + 330 minutes.
+  const reorderSettings = profile?.reorder_settings ?? {}
+  const sendTimeStr: string = reorderSettings.send_time ?? '09:00'
+  const [sendHour] = sendTimeStr.split(':').map(Number)
+
+  const nowUtcMs = Date.now()
+  const nowISTMs = nowUtcMs + 330 * 60 * 1000 // shift to IST
+  const nowISTHour = new Date(nowISTMs).getUTCHours()
+
+  // If the send_time hour is outside 9–20 IST, re-queue for next send window.
+  // We re-schedule to tomorrow at the configured send_time rather than cancelling.
+  const sendWindowStart = sendHour
+  const sendWindowEnd   = 20
+  if (nowISTHour < sendWindowStart || nowISTHour >= sendWindowEnd) {
+    // Re-schedule for tomorrow at send_time IST
+    const tomorrowIST = new Date(nowISTMs)
+    tomorrowIST.setUTCDate(tomorrowIST.getUTCDate() + 1)
+    const [sh, sm] = sendTimeStr.split(':').map(Number)
+    tomorrowIST.setUTCHours(sh - 5, sm - 30, 0, 0)
+    await (supabase as any)
+      .from('automation_queue')
+      .update({ status: 'pending', scheduled_for: tomorrowIST.toISOString() })
+      .eq('id', automation.id)
+    console.log(`[cron] reorder_reminder ${automation.id}: outside send window (${nowISTHour}:xx IST) — rescheduled`)
+    return true // mark as "cancelled" for this run (re-queued for tomorrow)
+  }
+
+  return false // all checks passed — proceed to send
 }
 
 // ── Template name map ────────────────────────────────────────────────────────

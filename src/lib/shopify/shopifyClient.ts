@@ -1,7 +1,7 @@
 // Typed Shopify Admin API wrapper
 // All Shopify API calls go through here — never call Shopify API directly from components
 
-import type { ShopifyOrder } from './shopifyTypes'
+import type { ShopifyOrder, ShopifyProduct } from './shopifyTypes'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export class ShopifyClient {
@@ -59,6 +59,18 @@ export class ShopifyClient {
         refund: {},
       }),
     })
+  }
+
+  // Fetches product list for reorder settings — only fields needed for UI/checks.
+  async getProducts(limit = 100): Promise<{ products: ShopifyProduct[] }> {
+    return this.request<{ products: ShopifyProduct[] }>(
+      `/products.json?limit=${limit}&fields=id,title,status,variants`
+    )
+  }
+
+  // Fetches a single product — used by cron to check stock before sending reminder.
+  async getProduct(productId: string): Promise<{ product: ShopifyProduct }> {
+    return this.request<{ product: ShopifyProduct }>(`/products/${productId}.json`)
   }
 }
 
