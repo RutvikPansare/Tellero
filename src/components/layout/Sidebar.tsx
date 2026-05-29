@@ -13,7 +13,6 @@ const NAV_ITEMS = [
   { label: "Templates",   href: "/dashboard/templates",   icon: LayoutTemplate, badge: null   },
   { label: "Contacts",    href: "/dashboard/contacts",    icon: Users,          badge: null   },
   { label: "Segments",    href: "/dashboard/segments",    icon: Target,         badge: null   },
-  { label: "Analytics",   href: "/dashboard/analytics",   icon: BarChart2,      badge: "Soon" },
   { label: "Inbox",       href: "/dashboard/inbox",       icon: MessageSquare,  badge: null   },
 ];
 
@@ -24,11 +23,17 @@ const AUTOMATION_ITEMS = [
   { label: "Reorder Reminders",   href: "/dashboard/automations/reorder" },
 ];
 
+const ANALYTICS_ITEMS = [
+  { label: "Campaigns",   href: "/dashboard/analytics/campaigns" },
+  { label: "Automations", href: "/dashboard/analytics/automations" },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
   const router   = useRouter();
   const supabase = createClient();
   const onAutomations = pathname.startsWith("/dashboard/automations");
+  const onAnalytics   = pathname.startsWith("/dashboard/analytics");
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -114,6 +119,43 @@ export default function Sidebar() {
         {/* Sub-items — always visible so users can jump between automations */}
         <div className="flex flex-col gap-0.5 ml-4 pl-3" style={{ borderLeft: "2px solid var(--border)" }}>
           {AUTOMATION_ITEMS.map(({ label, href }) => {
+            const isActive = pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-all"
+                style={{
+                  fontSize: 13,
+                  fontWeight: isActive ? 600 : 400,
+                  color:  isActive ? "var(--burgundy)" : "var(--text-muted)",
+                  background: isActive ? "rgba(56,0,8,0.05)" : "transparent",
+                  textDecoration: "none",
+                }}
+                onMouseOver={(e) => { if (!isActive) { e.currentTarget.style.color = "var(--text-dark)"; e.currentTarget.style.background = "var(--cream-3)"; } }}
+                onMouseOut={(e)  => { if (!isActive) { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "transparent"; } }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Analytics group with sub-nav */}
+        <Link
+          href="/dashboard/analytics/campaigns"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+          style={linkStyle(onAnalytics)}
+          onMouseOver={(e) => { if (!onAnalytics) { e.currentTarget.style.background = "var(--cream-3)"; e.currentTarget.style.color = "var(--text-dark)"; } }}
+          onMouseOut={(e)  => { if (!onAnalytics) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-mid)"; } }}
+        >
+          <BarChart2 size={15} />
+          <span className="flex-1">Analytics</span>
+          {onAnalytics && <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />}
+        </Link>
+
+        <div className="flex flex-col gap-0.5 ml-4 pl-3" style={{ borderLeft: "2px solid var(--border)" }}>
+          {ANALYTICS_ITEMS.map(({ label, href }) => {
             const isActive = pathname.startsWith(href);
             return (
               <Link
