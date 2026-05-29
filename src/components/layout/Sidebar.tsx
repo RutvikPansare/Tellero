@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { usePlan } from "@/hooks/usePlan";
+import { PLAN_DISPLAY } from "@/lib/planLimits";
 import {
   Megaphone, Users, BarChart2, Settings,
-  LogOut, Zap, MessageSquare, ChevronRight, LayoutTemplate, Target,
+  LogOut, Zap, MessageSquare, ChevronRight, LayoutTemplate, Target, CreditCard,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -32,8 +34,11 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router   = useRouter();
   const supabase = createClient();
+  const { plan, isPaid } = usePlan();
+  const planDisplay = PLAN_DISPLAY[plan];
   const onAutomations = pathname.startsWith("/dashboard/automations");
   const onAnalytics   = pathname.startsWith("/dashboard/analytics");
+  const onSettings    = pathname.startsWith("/dashboard/settings");
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -73,6 +78,18 @@ export default function Sidebar() {
         <span className="font-logo" style={{ fontSize: 20, color: "var(--text-dark)" }}>
           Tellero
         </span>
+        <Link
+          href="/dashboard/settings/billing"
+          style={{
+            fontSize: 9, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase",
+            padding: "2px 7px", borderRadius: 99, textDecoration: "none",
+            background: isPaid ? "rgba(37,211,102,0.12)" : "var(--cream-3)",
+            color: isPaid ? "#16A34A" : "var(--text-muted)",
+            border: isPaid ? "1px solid rgba(37,211,102,0.3)" : "1px solid var(--border)",
+          }}
+        >
+          {isPaid ? `${planDisplay.label.replace(' Plan', '')} ✓` : "Free ↑"}
+        </Link>
       </div>
 
       {/* Nav */}
@@ -187,13 +204,47 @@ export default function Sidebar() {
         <Link
           href="/dashboard/settings"
           className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-          style={{ color: "var(--text-mid)", textDecoration: "none" }}
-          onMouseOver={(e) => { e.currentTarget.style.background = "var(--cream-3)"; e.currentTarget.style.color = "var(--text-dark)"; }}
-          onMouseOut={(e)  => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-mid)"; }}
+          style={linkStyle(onSettings)}
+          onMouseOver={(e) => { if (!onSettings) { e.currentTarget.style.background = "var(--cream-3)"; e.currentTarget.style.color = "var(--text-dark)"; } }}
+          onMouseOut={(e)  => { if (!onSettings) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-mid)"; } }}
         >
           <Settings size={15} />
-          Settings
+          <span className="flex-1">Settings</span>
+          {onSettings && <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />}
         </Link>
+
+        {onSettings && (
+          <div className="flex flex-col gap-0.5 ml-4 pl-3" style={{ borderLeft: "2px solid var(--border)" }}>
+            <Link
+              href="/dashboard/settings/billing"
+              className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-all"
+              style={{
+                fontSize: 13,
+                fontWeight: pathname.includes("/billing") ? 600 : 400,
+                color: pathname.includes("/billing") ? "var(--burgundy)" : "var(--text-muted)",
+                background: pathname.includes("/billing") ? "rgba(56,0,8,0.05)" : "transparent",
+                textDecoration: "none",
+              }}
+            >
+              <CreditCard size={12} />
+              Billing
+            </Link>
+            <Link
+              href="/dashboard/settings/shopify"
+              className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-all"
+              style={{
+                fontSize: 13,
+                fontWeight: pathname.includes("/shopify") ? 600 : 400,
+                color: pathname.includes("/shopify") ? "var(--burgundy)" : "var(--text-muted)",
+                background: pathname.includes("/shopify") ? "rgba(56,0,8,0.05)" : "transparent",
+                textDecoration: "none",
+              }}
+            >
+              Shopify
+            </Link>
+          </div>
+        )}
+
         <button
           onClick={handleSignOut}
           className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all w-full text-left"

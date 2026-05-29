@@ -18,6 +18,12 @@ export interface Database {
           brand_name: string | null
           whatsapp_number: string | null
           plan: 'free' | 'starter' | 'growth' | 'scale'
+          plan_status: 'active' | 'past_due' | 'cancelled' | 'trialing'
+          razorpay_subscription_id: string | null
+          razorpay_customer_id: string | null
+          current_period_start: string | null
+          current_period_end: string | null
+          plan_updated_at: string | null
           waba_id: string | null
           meta_access_token: string | null
           cod_settings: Json | null
@@ -33,6 +39,12 @@ export interface Database {
           brand_name?: string | null
           whatsapp_number?: string | null
           plan?: 'free' | 'starter' | 'growth' | 'scale'
+          plan_status?: 'active' | 'past_due' | 'cancelled' | 'trialing'
+          razorpay_subscription_id?: string | null
+          razorpay_customer_id?: string | null
+          current_period_start?: string | null
+          current_period_end?: string | null
+          plan_updated_at?: string | null
           waba_id?: string | null
           meta_access_token?: string | null
           cod_settings?: Json | null
@@ -48,6 +60,12 @@ export interface Database {
           brand_name?: string | null
           whatsapp_number?: string | null
           plan?: 'free' | 'starter' | 'growth' | 'scale'
+          plan_status?: 'active' | 'past_due' | 'cancelled' | 'trialing'
+          razorpay_subscription_id?: string | null
+          razorpay_customer_id?: string | null
+          current_period_start?: string | null
+          current_period_end?: string | null
+          plan_updated_at?: string | null
           waba_id?: string | null
           meta_access_token?: string | null
           cod_settings?: Json | null
