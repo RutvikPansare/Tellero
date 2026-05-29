@@ -22,6 +22,7 @@ interface MetaStatus {
   status:       'sent' | 'delivered' | 'read' | 'failed'
   timestamp:    string
   recipient_id: string
+  errors?:      Array<{ code: number; title: string }>
 }
 
 interface MetaContact {
@@ -490,6 +491,16 @@ async function handleInboundMessage(
   }
   // ── End opt-out interception ───────────────────────────────────────────────
 
+  // ── Reply tracking for automation analytics ───────────────────────────────
+  // Mark the most recent automation_queue item for this phone as replied.
+  // Covers abandoned cart, reorder reminders, order notifications, etc.
+  // COD replies are handled above and excluded from this RPC.
+  await (supabase as any).rpc('mark_automation_replied', {
+    p_user_id:    userId,
+    p_phone:      phone,
+    p_replied_at: msgAt,
+  })
+  // ── End reply tracking ─────────────────────────────────────────────────────
 
   const { data: contact } = await supabase
     .from('contacts')
@@ -540,22 +551,26 @@ async function handleInboundMessage(
 }
 
 async function handleStatus(supabase: AdminClient, status: MetaStatus) {
-  // Only update if it's a progression (don't downgrade read→delivered)
-  const priority: Record<string, number> = { sent: 1, delivered: 2, read: 3, failed: 0 }
-  const newPriority = priority[status.status] ?? 0
+  const ts = new Date(parseInt(status.timestamp, 10) * 1000).toISOString()
+  const errorCode    = status.errors?.[0]?.code?.toString() ?? null
+  const errorMessage = status.errors?.[0]?.title ?? null
 
-  const { data: existing } = await supabase
-    .from('messages')
-    .select('id, status')
-    .eq('meta_message_id', status.id)
-    .maybeSingle()
+  const { data, error } = await (supabase as any).rpc('process_message_status', {
+    p_meta_message_id: status.id,
+    p_status:          status.status,
+    p_timestamp:       ts,
+    p_error_code:      errorCode,
+    p_error_message:   errorMessage,
+  })
 
-  if (!existing) return
-  const currentPriority = priority[existing.status as string] ?? 0
-  if (newPriority <= currentPriority) return
+  if (error) {
+    console.error('[meta/webhook] process_message_status RPC error:', error)
+    return
+  }
 
-  await supabase
-    .from('messages')
-    .update({ status: status.status })
-    .eq('id', existing.id)
+  if (data === 'not_found') {
+    // Meta occasionally delivers status updates before our send path
+    // has stored the message ID — race condition. Log and ignore.
+    console.log(`[meta/webhook] status ${status.status} for unknown wamid: ${status.id}`)
+  }
 }

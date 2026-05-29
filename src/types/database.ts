@@ -508,6 +508,11 @@ export interface Database {
           body: string
           meta_message_id: string | null
           status: 'sent' | 'delivered' | 'read' | 'failed'
+          delivered_at: string | null
+          read_at: string | null
+          failed_at: string | null
+          error_code: string | null
+          error_message: string | null
           created_at: string
         }
         Insert: {
@@ -517,6 +522,11 @@ export interface Database {
           body: string
           meta_message_id?: string | null
           status?: 'sent' | 'delivered' | 'read' | 'failed'
+          delivered_at?: string | null
+          read_at?: string | null
+          failed_at?: string | null
+          error_code?: string | null
+          error_message?: string | null
           created_at?: string
         }
         Update: {
@@ -526,6 +536,11 @@ export interface Database {
           body?: string
           meta_message_id?: string | null
           status?: 'sent' | 'delivered' | 'read' | 'failed'
+          delivered_at?: string | null
+          read_at?: string | null
+          failed_at?: string | null
+          error_code?: string | null
+          error_message?: string | null
           created_at?: string
         }
         Relationships: []
@@ -545,6 +560,9 @@ export interface Database {
           recipient_phone: string
           whatsapp_message_id: string | null
           sent_at: string | null
+          delivered_at: string | null
+          read_at: string | null
+          replied_at: string | null
           error_message: string | null
           retry_count: number
           created_at: string
@@ -563,6 +581,9 @@ export interface Database {
           recipient_phone: string
           whatsapp_message_id?: string | null
           sent_at?: string | null
+          delivered_at?: string | null
+          read_at?: string | null
+          replied_at?: string | null
           error_message?: string | null
           retry_count?: number
           created_at?: string
@@ -581,6 +602,9 @@ export interface Database {
           recipient_phone?: string
           whatsapp_message_id?: string | null
           sent_at?: string | null
+          delivered_at?: string | null
+          read_at?: string | null
+          replied_at?: string | null
           error_message?: string | null
           retry_count?: number
           created_at?: string

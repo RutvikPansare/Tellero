@@ -33,6 +33,11 @@ export function useReply(
       body:            text.trim(),
       meta_message_id: null,
       status:          'sent',
+      delivered_at:    null,
+      read_at:         null,
+      failed_at:       null,
+      error_code:      null,
+      error_message:   null,
       created_at:      new Date().toISOString(),
     }
 
