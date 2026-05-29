@@ -51,7 +51,7 @@ export function AbandonedCartLog({ checkouts, loading, error }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full" style={{ minWidth: 780 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--cream-2)' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 {COLUMNS.map((h, i) => (
                   <th
                     key={h}

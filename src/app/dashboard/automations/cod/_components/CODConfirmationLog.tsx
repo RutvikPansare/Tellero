@@ -49,7 +49,7 @@ export function CODConfirmationLog({ confirmations, loading, error }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full" style={{ minWidth: 680 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--cream-2)' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 {['Customer', 'Order', 'Sent', 'Reply', 'Status', 'Action'].map(h => (
                   <th
                     key={h}
