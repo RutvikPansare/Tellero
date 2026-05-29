@@ -239,7 +239,7 @@ export default function Sidebar() {
                 textDecoration: "none",
               }}
             >
-              Shopify
+              Integrations
             </Link>
           </div>
 
