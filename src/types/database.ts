@@ -22,6 +22,7 @@ export interface Database {
           meta_access_token: string | null
           cod_settings: Json | null
           abandoned_cart_settings: Json | null
+          order_notification_settings: Json | null
         }
         Insert: {
           id: string
@@ -35,6 +36,7 @@ export interface Database {
           meta_access_token?: string | null
           cod_settings?: Json | null
           abandoned_cart_settings?: Json | null
+          order_notification_settings?: Json | null
         }
         Update: {
           id?: string
@@ -48,6 +50,7 @@ export interface Database {
           meta_access_token?: string | null
           cod_settings?: Json | null
           abandoned_cart_settings?: Json | null
+          order_notification_settings?: Json | null
         }
       }
       broadcasts: {

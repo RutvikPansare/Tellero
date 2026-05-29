@@ -117,12 +117,51 @@ async function processQueue(request: NextRequest) {
       // ── Get brand's WhatsApp credentials ───────────────────────────────────
       const { data: profile } = await supabase
         .from('profiles')
-        .select('waba_id, meta_access_token, whatsapp_number, cod_settings')
+        .select('waba_id, meta_access_token, whatsapp_number, cod_settings, abandoned_cart_settings, order_notification_settings')
         .eq('id', automation.user_id)
         .single()
 
       if (!profile?.meta_access_token || !profile?.waba_id) {
         throw new Error('User has no WhatsApp connection configured')
+      }
+
+      // ── Order confirmation: check enabled + not cancelled ──────────────────
+      if (automation.event_type === 'order_confirmed') {
+        const orderSettings = (profile as any).order_notification_settings ?? {}
+        if (!orderSettings.order_confirmation_enabled) {
+          await (supabase as any)
+            .from('automation_queue')
+            .update({ status: 'cancelled' })
+            .eq('id', automation.id)
+          continue
+        }
+        // Skip if order was cancelled/voided before we could send
+        if (automation.order_id) {
+          const { data: ord } = await (supabase as any)
+            .from('orders')
+            .select('cancel_reason, financial_status')
+            .eq('id', automation.order_id)
+            .maybeSingle()
+          if (ord?.cancel_reason || ord?.financial_status === 'voided') {
+            await (supabase as any)
+              .from('automation_queue')
+              .update({ status: 'cancelled' })
+              .eq('id', automation.id)
+            continue
+          }
+        }
+      }
+
+      // ── Shipping update: check enabled ─────────────────────────────────────
+      if (automation.event_type === 'order_shipped') {
+        const orderSettings = (profile as any).order_notification_settings ?? {}
+        if (!orderSettings.shipping_update_enabled) {
+          await (supabase as any)
+            .from('automation_queue')
+            .update({ status: 'cancelled' })
+            .eq('id', automation.id)
+          continue
+        }
       }
 
       // ── Send WhatsApp template ─────────────────────────────────────────────

@@ -56,19 +56,31 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (contact) {
-      await supabase.from('automation_queue').insert({
-        user_id: userId,
-        event_type: 'order_shipped',
-        contact_id: contact.id,
-        recipient_phone: normalizedPhone,
-        scheduled_for: new Date().toISOString(),
-        template_variables: {
-          customer_name: order.customer?.first_name ?? 'there',
-          order_number: order.name,
-          tracking_number: trackingNumber ?? 'Not available yet',
-          tracking_url: trackingUrl ?? '',
-        },
-      })
+      // Duplicate guard — only send one shipping update per order
+      const { data: existing } = await (supabase as any)
+        .from('automation_queue')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('event_type', 'order_shipped')
+        .eq('contact_id', contact.id)
+        .not('status', 'eq', 'cancelled')
+        .maybeSingle()
+
+      if (!existing) {
+        await supabase.from('automation_queue').insert({
+          user_id: userId,
+          event_type: 'order_shipped',
+          contact_id: contact.id,
+          recipient_phone: normalizedPhone,
+          scheduled_for: new Date().toISOString(),
+          template_variables: {
+            customer_name: order.customer?.first_name ?? 'there',
+            order_number: order.name,
+            tracking_number: trackingNumber ?? 'Not available yet',
+            tracking_url: trackingUrl ?? '',
+          },
+        })
+      }
     }
   }
 

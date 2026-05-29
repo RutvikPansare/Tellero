@@ -18,8 +18,9 @@ const NAV_ITEMS = [
 ];
 
 const AUTOMATION_ITEMS = [
-  { label: "COD Confirmation", href: "/dashboard/automations/cod" },
-  { label: "Abandoned Cart",   href: "/dashboard/automations/abandoned-cart" },
+  { label: "COD Confirmation",    href: "/dashboard/automations/cod" },
+  { label: "Abandoned Cart",      href: "/dashboard/automations/abandoned-cart" },
+  { label: "Order Notifications", href: "/dashboard/automations/order-notifications" },
 ];
 
 export default function Sidebar() {
