@@ -213,8 +213,7 @@ export default function Sidebar() {
           {onSettings && <ChevronRight size={12} style={{ color: "var(--burgundy)", opacity: 0.5 }} />}
         </Link>
 
-        {onSettings && (
-          <div className="flex flex-col gap-0.5 ml-4 pl-3" style={{ borderLeft: "2px solid var(--border)" }}>
+        <div className="flex flex-col gap-0.5 ml-4 pl-3" style={{ borderLeft: "2px solid var(--border)" }}>
             <Link
               href="/dashboard/settings/billing"
               className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-all"
@@ -243,7 +242,6 @@ export default function Sidebar() {
               Shopify
             </Link>
           </div>
-        )}
 
         <button
           onClick={handleSignOut}
