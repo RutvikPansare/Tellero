@@ -21,6 +21,7 @@ const AUTOMATION_ITEMS = [
   { label: "COD Confirmation",    href: "/dashboard/automations/cod" },
   { label: "Abandoned Cart",      href: "/dashboard/automations/abandoned-cart" },
   { label: "Order Notifications", href: "/dashboard/automations/order-notifications" },
+  { label: "Reorder Reminders",   href: "/dashboard/automations/reorder" },
 ];
 
 export default function Sidebar() {
