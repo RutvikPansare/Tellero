@@ -12,7 +12,7 @@ interface Props {
 
 function Skeleton() {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 300px))", gap: 16, alignItems: "start" }}>
       {[1, 2, 3].map(i => (
         <div key={i} style={{
           height: 160, borderRadius: 14, background: "white",
@@ -65,7 +65,7 @@ export function SegmentList({ segments, loading, onEdit, onDelete, onNew, onClic
   if (segments.length === 0) return <EmptyState onNew={onNew} />;
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 300px))", gap: 16, alignItems: "start" }}>
       {segments.map(s => (
         <SegmentCard
           key={s.id}
