@@ -20,8 +20,7 @@ export function InboxFilters({ active, counts, onChange }: InboxFiltersProps) {
     <div style={{
       display:    'flex',
       gap:        4,
-      padding:    '8px 8px',
-      borderBottom: '1px solid var(--border)',
+      padding:    '0 0 10px',
       overflowX:  'auto',
       scrollbarWidth: 'none',
       WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
