@@ -14,7 +14,7 @@ export default function Header({ title, subtitle, actions }: HeaderProps) {
       className="flex items-center justify-between px-6 py-4 flex-shrink-0"
       style={{
         borderBottom: "1px solid var(--border)",
-        background:   "white",
+        background:   "var(--cream)",
         fontFamily:   "var(--font-dm-sans,'DM Sans',sans-serif)",
       }}
     >
