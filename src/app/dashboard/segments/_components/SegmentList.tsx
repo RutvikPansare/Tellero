@@ -7,6 +7,7 @@ interface Props {
   onEdit:   (seg: Segment) => void;
   onDelete: (id: string) => void;
   onNew:    () => void;
+  onClick:  (seg: Segment) => void;
 }
 
 function Skeleton() {
@@ -59,7 +60,7 @@ function EmptyState({ onNew }: { onNew: () => void }) {
   );
 }
 
-export function SegmentList({ segments, loading, onEdit, onDelete, onNew }: Props) {
+export function SegmentList({ segments, loading, onEdit, onDelete, onNew, onClick }: Props) {
   if (loading) return <Skeleton />;
   if (segments.length === 0) return <EmptyState onNew={onNew} />;
 
@@ -71,6 +72,7 @@ export function SegmentList({ segments, loading, onEdit, onDelete, onNew }: Prop
           segment={s}
           onEdit={onEdit}
           onDelete={onDelete}
+          onClick={onClick}
         />
       ))}
     </div>

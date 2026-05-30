@@ -8,9 +8,10 @@ interface Props {
   segment:  Segment;
   onEdit:   (seg: Segment) => void;
   onDelete: (id: string) => void;
+  onClick:  (seg: Segment) => void;
 }
 
-export function SegmentCard({ segment, onEdit, onDelete }: Props) {
+export function SegmentCard({ segment, onEdit, onDelete, onClick }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const filterCount = segment.filters.length;
@@ -21,14 +22,21 @@ export function SegmentCard({ segment, onEdit, onDelete }: Props) {
   return (
     <div
       className="card"
+      onClick={() => onClick(segment)}
       style={{
-        cursor:     "default",
-        transition: "border-color 0.15s",
+        cursor:     "pointer",
+        transition: "border-color 0.15s, box-shadow 0.15s",
         position:   "relative",
         overflow:   "visible",
       }}
-      onMouseOver={e => (e.currentTarget.style.borderColor = "rgba(26,20,17,0.18)")}
-      onMouseOut={e  => (e.currentTarget.style.borderColor = "var(--border)")}
+      onMouseOver={e => {
+        e.currentTarget.style.borderColor = "rgba(26,20,17,0.22)";
+        e.currentTarget.style.boxShadow   = "0 4px 16px rgba(0,0,0,0.07)";
+      }}
+      onMouseOut={e  => {
+        e.currentTarget.style.borderColor = "var(--border)";
+        e.currentTarget.style.boxShadow   = "none";
+      }}
     >
       <div style={{ padding: "16px 16px 12px" }}>
         {/* Top row */}
@@ -38,7 +46,7 @@ export function SegmentCard({ segment, onEdit, onDelete }: Props) {
           </p>
           <div style={{ position: "relative" }}>
             <button
-              onClick={() => setMenuOpen(v => !v)}
+              onClick={e => { e.stopPropagation(); setMenuOpen(v => !v); }}
               style={{ background:"transparent", border:"none", cursor:"pointer", padding:4, borderRadius:6, color:"var(--text-muted)", display:"flex" }}
               onMouseOver={e=>(e.currentTarget.style.background="var(--cream-2)")}
               onMouseOut={e =>(e.currentTarget.style.background="transparent")}>
@@ -53,14 +61,14 @@ export function SegmentCard({ segment, onEdit, onDelete }: Props) {
                   boxShadow:"0 8px 24px rgba(0,0,0,0.1)", minWidth:150, overflow:"hidden",
                 }}>
                   <button
-                    onClick={() => { onEdit(segment); setMenuOpen(false); }}
+                    onClick={e => { e.stopPropagation(); onEdit(segment); setMenuOpen(false); }}
                     style={{ width:"100%", display:"flex", alignItems:"center", gap:8, padding:"9px 14px", border:"none", background:"transparent", cursor:"pointer", fontSize:13, color:"var(--text-dark)", textAlign:"left" }}
                     onMouseOver={e=>(e.currentTarget.style.background="var(--cream)")}
                     onMouseOut={e =>(e.currentTarget.style.background="transparent")}>
                     <Pencil size={12} style={{ color:"var(--text-muted)" }} /> Edit
                   </button>
                   <button
-                    onClick={() => { onDelete(segment.id); setMenuOpen(false); }}
+                    onClick={e => { e.stopPropagation(); onDelete(segment.id); setMenuOpen(false); }}
                     style={{ width:"100%", display:"flex", alignItems:"center", gap:8, padding:"9px 14px", border:"none", borderTop:"1px solid var(--border)", background:"transparent", cursor:"pointer", fontSize:13, color:"#DC2626", textAlign:"left" }}
                     onMouseOver={e=>(e.currentTarget.style.background="rgba(239,68,68,0.05)")}
                     onMouseOut={e =>(e.currentTarget.style.background="transparent")}>

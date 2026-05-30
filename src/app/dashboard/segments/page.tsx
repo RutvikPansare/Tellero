@@ -46,6 +46,7 @@ export default function SegmentsPage() {
         onEdit={openEdit}
         onDelete={handleDelete}
         onNew={openNew}
+        onClick={openEdit}
       />
 
       <CreateSegmentModal
