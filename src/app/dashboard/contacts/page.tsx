@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { ContactsHeader }    from "./_components/ContactsHeader";
 import { ContactsTable }     from "./_components/ContactsTable";
 import { ContactDrawer }     from "./_components/ContactDrawer";
 import { BulkActionBar }     from "./_components/BulkActionBar";
 import { ManageTagsModal }   from "./_components/ManageTagsModal";
+import { ImportCsvModal }    from "./_components/ImportCsvModal";
 import { useContacts }       from "./_hooks/useContacts";
 import { useContactTags }    from "./_hooks/useContactTags";
 import { createClient }      from "@/lib/supabase/client";
@@ -57,8 +58,8 @@ export default function ContactsPage() {
   const [selectedIds,   setSelectedIds]   = useState<Set<string>>(new Set());
   const [importMsg,     setImportMsg]     = useState<{ text: string; ok: boolean } | null>(null);
   const [importing,     setImporting]     = useState(false);
-  const [tagsModalOpen, setTagsModalOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [tagsModalOpen,   setTagsModalOpen]   = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
 
   const {
     contacts, totalCount, loading, error,
@@ -102,10 +103,7 @@ export default function ContactsPage() {
   }
 
   /* ── CSV import ────────────────────────────────────────────── */
-  async function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    e.target.value = ""; // allow re-selecting the same file
+  async function handleImportFile(file: File) {
     setImporting(true);
     setImportMsg(null);
 
@@ -173,21 +171,12 @@ export default function ContactsPage() {
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px", display: "flex", flexDirection: "column", gap: 20, background: "var(--cream)" }}>
 
-      {/* Hidden file input — triggered programmatically */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".csv,text/csv"
-        style={{ display: "none" }}
-        onChange={handleImportFile}
-      />
-
       <ContactsHeader
         contacts={contacts}
         totalCount={totalCount}
         importing={importing}
         onManageTags={() => setTagsModalOpen(true)}
-        onImport={() => fileInputRef.current?.click()}
+        onImport={() => setImportModalOpen(true)}
       />
 
       {/* Import status banner */}
@@ -274,6 +263,13 @@ export default function ContactsPage() {
           onCreate={async (name, color) => { const t = await createTag(name, color); refetchTags(); return t; }}
           onRename={renameTag}
           onDelete={deleteTag}
+        />
+      )}
+
+      {importModalOpen && (
+        <ImportCsvModal
+          onClose={() => setImportModalOpen(false)}
+          onFile={handleImportFile}
         />
       )}
     </div>
