@@ -27,7 +27,7 @@ export function ConversationList({
   conversations, loading, activeId, onSelect, emptyMessage,
 }: ConversationListProps) {
   return (
-    <div style={{ flex: 1, overflowY: 'auto' }}>
+    <div style={{ flex: 1, overflowY: 'auto', borderTop: '1px solid var(--border)' }}>
       {loading
         ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
         : conversations.length === 0
