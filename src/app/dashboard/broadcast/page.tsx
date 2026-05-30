@@ -286,8 +286,8 @@ function CreateModal({ state, dispatch, onCreated }:
 
   return (
     <div ref={overlayRef} onClick={handleOverlay} className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{ background:"rgba(26,20,17,0.55)", backdropFilter:"blur(4px)" }}>
-      <div className="card w-full flex flex-col" style={{ maxWidth:760, maxHeight:"90vh", margin:"0 16px", overflow:"hidden" }}>
+      style={{ background:"rgba(26,20,17,0.45)", backdropFilter:"blur(3px)", WebkitBackdropFilter:"blur(3px)" }}>
+      <div className="w-full flex flex-col" style={{ background:"white", borderRadius:18, border:"1px solid var(--border)", boxShadow:"0 24px 64px rgba(0,0,0,0.18)", maxWidth:760, maxHeight:"90vh", margin:"0 16px", overflow:"hidden" }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 flex-shrink-0"
@@ -312,7 +312,7 @@ function CreateModal({ state, dispatch, onCreated }:
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto" style={{ background:"var(--cream)" }}>
+        <div className="flex-1 overflow-y-auto" style={{ background:"white" }}>
 
           {/* Step 1: Compose */}
           {state.step==="compose" && (

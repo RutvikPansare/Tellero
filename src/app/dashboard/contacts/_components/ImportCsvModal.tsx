@@ -77,12 +77,12 @@ export function ImportCsvModal({ onClose, onFile }: Props) {
       >
         <div
           style={{
-            background: "var(--cream)",
+            background: "white",
             border: "1px solid var(--border)",
-            borderRadius: 16,
+            borderRadius: 18,
             width: "100%",
             maxWidth: 520,
-            boxShadow: "0 24px 60px rgba(0,0,0,0.18)",
+            boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
             overflow: "hidden",
             pointerEvents: "auto",
           }}
@@ -134,7 +134,7 @@ export function ImportCsvModal({ onClose, onFile }: Props) {
                 CSV Column Reference
               </p>
               <div style={{
-                background: "white",
+                background: "var(--cream)",
                 border: "1px solid var(--border)",
                 borderRadius: 10,
                 overflow: "hidden",
@@ -227,7 +227,7 @@ export function ImportCsvModal({ onClose, onFile }: Props) {
                 borderRadius: 12,
                 padding: "28px 20px",
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
-                background: dragging ? "rgba(56,0,8,0.04)" : "white",
+                background: dragging ? "rgba(56,0,8,0.04)" : "var(--cream)",
                 cursor: "pointer",
                 transition: "border-color 0.15s, background 0.15s",
               }}

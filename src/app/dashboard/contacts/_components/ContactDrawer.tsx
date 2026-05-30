@@ -108,7 +108,7 @@ export function ContactDrawer({ contactId, onClose, onDeleted }: Props) {
           alignItems:   "flex-start",
           justifyContent:"space-between",
           flexShrink:   0,
-          background:   "var(--cream)",
+          background:   "white",
         }}>
           {loading ? (
             <div style={{ height: 20, width: 120, borderRadius: 4, background: "var(--border)" }} />

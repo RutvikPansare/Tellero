@@ -112,6 +112,73 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────
+   MODAL SYSTEM
+   All modals share: white body, 18px radius, blurred overlay.
+   Use .modal-overlay > .modal > .modal-header + .modal-body + .modal-footer
+   ───────────────────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(26, 20, 17, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.modal {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: white;
+}
+
+/* Padded body — use for simple forms/content */
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+  padding: 24px;
+}
+
+/* No-padding variant — for split-panel or custom-padded content */
+.modal-body-bare {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+}
+
+.modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: white;
+}
+
+/* ─────────────────────────────────────────────────────────
    CARD SYSTEM — border-radius always var(--radius-card)
    ───────────────────────────────────────────────────────── */
 
