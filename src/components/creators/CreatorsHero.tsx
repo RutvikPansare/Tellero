@@ -8,139 +8,253 @@ const fadeUp = {
   viewport: { once: true },
 };
 
-/* ── Mini UI cards for each flow step ── */
+/* ── Shared card shell ── */
+function FlowCard({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <div
+      style={{
+        background: "white",
+        borderRadius: 20,
+        border: "1px solid rgba(26,20,17,0.07)",
+        boxShadow: "0 4px 24px rgba(26,20,17,0.07), 0 1px 4px rgba(26,20,17,0.04)",
+        padding: "14px 16px",
+        width: 172,
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
+/* ── Step 1: Instagram Comment ── */
 function StepInstagramComment() {
   return (
-    <div className="card p-3 flex flex-col gap-2" style={{ minWidth: 160 }}>
-      <div className="flex items-center gap-1.5 mb-1">
-        <div className="w-4 h-4 rounded-full" style={{ background: "linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)" }} />
-        <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-dark)" }}>Instagram</span>
+    <FlowCard>
+      {/* App bar */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8, flexShrink: 0,
+          background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" /><circle cx="12" cy="12" r="5" /><circle cx="17" cy="7" r="1.2" fill="white" stroke="none" />
+          </svg>
+        </div>
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#1A1411", lineHeight: 1 }}>Instagram</div>
+          <div style={{ fontSize: 9, color: "#9C8F83", marginTop: 2 }}>1 new comment</div>
+        </div>
+        <div style={{ marginLeft: "auto", width: 6, height: 6, borderRadius: "50%", background: "#E1306C" }} />
       </div>
-      <div className="rounded-lg p-2.5" style={{ background: "var(--cream-2)", border: "1px solid var(--border)" }}>
-        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 mb-1.5" />
-        <div style={{ fontSize: 11, color: "var(--text-dark)", lineHeight: 1.4 }}>
-          <span style={{ fontWeight: 600 }}>@priya_fitness</span>
-          <br />
-          <span style={{ color: "var(--text-mid)" }}>Can you send me INFO? 🔥</span>
+      {/* Post thumbnail */}
+      <div style={{
+        borderRadius: 12, overflow: "hidden", height: 80,
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        display: "flex", alignItems: "flex-end", padding: 8,
+      }}>
+        <div style={{
+          background: "rgba(255,255,255,0.18)", backdropFilter: "blur(8px)",
+          borderRadius: 8, padding: "5px 8px",
+          fontSize: 10, color: "white", fontWeight: 600,
+        }}>
+          🔥 New Batch Open
         </div>
       </div>
-      <div className="flex items-center gap-1">
-        <div className="w-2 h-2 rounded-full" style={{ background: "#E1306C" }} />
-        <span style={{ fontSize: 9, color: "var(--text-muted)", fontWeight: 500 }}>1 new comment</span>
+      {/* Comment bubble */}
+      <div style={{
+        background: "#F7F7F7", borderRadius: "10px 10px 10px 2px",
+        padding: "7px 10px", fontSize: 11, color: "#1A1411", lineHeight: 1.4,
+      }}>
+        <span style={{ fontWeight: 700, color: "#bc1888" }}>@priya_fitness</span>
+        <span style={{ color: "#555" }}> INFO please! 🙏</span>
       </div>
-    </div>
+    </FlowCard>
   );
 }
 
+/* ── Step 2: Auto DM ── */
 function StepAutoDM() {
   return (
-    <div className="card p-3 flex flex-col gap-2" style={{ minWidth: 160 }}>
-      <div className="flex items-center justify-between mb-1">
-        <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-dark)" }}>Auto DM</span>
-        <span className="px-1.5 py-0.5 rounded-full" style={{ fontSize: 9, fontWeight: 700, background: "rgba(37,211,102,0.12)", color: "#25D366" }}>Instant</span>
+    <FlowCard>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{
+            width: 26, height: 26, borderRadius: 7,
+            background: "linear-gradient(135deg, #1A1411, #3d2e28)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+          </div>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#1A1411" }}>Auto DM</span>
+        </div>
+        <span style={{
+          fontSize: 9, fontWeight: 700, padding: "3px 7px", borderRadius: 99,
+          background: "rgba(37,211,102,0.1)", color: "#25D366",
+          border: "1px solid rgba(37,211,102,0.2)",
+        }}>Instant</span>
       </div>
-      <div className="rounded-lg p-2.5" style={{ background: "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)", opacity: 0.92 }}>
-        <div style={{ fontSize: 11, color: "white", lineHeight: 1.45 }}>
-          Hey Priya! 👋 Thanks for your interest. Here&apos;s everything about my fitness program 💪
+      {/* Message preview */}
+      <div style={{
+        background: "linear-gradient(135deg, #1A1411 0%, #2d2420 100%)",
+        borderRadius: 12, padding: "10px 12px",
+      }}>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginBottom: 5, fontWeight: 600 }}>Sending to @priya_fitness</div>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.88)", lineHeight: 1.5 }}>
+          Hey Priya! 👋 Thanks for your interest in my program. Here&apos;s the full details 💪
         </div>
       </div>
-      <div className="flex items-center gap-1">
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#25D366" strokeWidth="1.5" strokeLinecap="round"/></svg>
-        <span style={{ fontSize: 9, color: "#25D366", fontWeight: 600 }}>Sent in 0.3s</span>
+      {/* Status */}
+      <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+        <div style={{ width: 16, height: 16, borderRadius: "50%", background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-5" stroke="#25D366" strokeWidth="1.5" strokeLinecap="round" /></svg>
+        </div>
+        <span style={{ fontSize: 10, color: "#25D366", fontWeight: 600 }}>Delivered in 0.3s</span>
       </div>
-    </div>
+    </FlowCard>
   );
 }
 
+/* ── Step 3: WhatsApp Chat ── */
 function StepWhatsApp() {
   return (
-    <div className="card p-3 flex flex-col gap-2" style={{ minWidth: 160, background: "#ECE5DD" }}>
-      <div className="flex items-center gap-1.5 mb-1">
-        <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "#25D366" }}>
+    <FlowCard style={{ background: "#F0F2F5" }}>
+      {/* Header */}
+      <div style={{
+        background: "#075E54", borderRadius: "20px 20px 0 0", padding: "8px 10px",
+        display: "flex", alignItems: "center", gap: 8, margin: "-14px -16px 0", marginBottom: 0,
+      }}>
+        <div style={{ width: 26, height: 26, borderRadius: "50%", background: "linear-gradient(135deg, #a855f7, #ec4899)", flexShrink: 0 }} />
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "white" }}>Priya Sharma</div>
+          <div style={{ fontSize: 9, color: "rgba(255,255,255,0.6)" }}>online</div>
+        </div>
+        <div style={{ marginLeft: "auto", width: 20, height: 20, borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.46 3.43 1.27 4.88L2 22l5.12-1.34A10 10 0 1012 2z"/></svg>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 600, color: "#075E54" }}>WhatsApp</span>
       </div>
-      <div className="rounded-xl rounded-tl-none p-2.5 self-start" style={{ background: "white", fontSize: 11, color: "#111", lineHeight: 1.45, maxWidth: 140 }}>
-        Yes! Tell me more about pricing 🙏
+      {/* Bubbles */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 4 }}>
+        <div style={{ background: "white", borderRadius: "12px 12px 12px 3px", padding: "7px 10px", fontSize: 11, color: "#1A1411", lineHeight: 1.4, maxWidth: "85%", boxShadow: "0 1px 3px rgba(0,0,0,0.07)" }}>
+          Interested! What&apos;s the price? 🙏
+        </div>
+        <div style={{ background: "#DCF8C6", borderRadius: "12px 12px 3px 12px", padding: "7px 10px", fontSize: 11, color: "#1A1411", lineHeight: 1.4, maxWidth: "85%", alignSelf: "flex-end", boxShadow: "0 1px 3px rgba(0,0,0,0.07)" }}>
+          Here&apos;s your personalised plan 👇
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 3, marginTop: 3 }}>
+            <svg width="12" height="8" viewBox="0 0 16 10" fill="none"><path d="M1 5l3 3 5-7" stroke="#34B7F1" strokeWidth="1.5" strokeLinecap="round"/><path d="M6 5l3 3 5-7" stroke="#34B7F1" strokeWidth="1.5" strokeLinecap="round"/></svg>
+          </div>
+        </div>
       </div>
-      <div className="rounded-xl rounded-tr-none p-2.5 self-end" style={{ background: "#DCF8C6", fontSize: 11, color: "#111", lineHeight: 1.45, maxWidth: 140 }}>
-        Sure! Here&apos;s your personalised plan 👇
-      </div>
-    </div>
+    </FlowCard>
   );
 }
 
+/* ── Step 4: Lead Captured ── */
 function StepLeadCaptured() {
   return (
-    <div className="card p-3 flex flex-col gap-2" style={{ minWidth: 160 }}>
-      <div className="flex items-center justify-between mb-1">
-        <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-dark)" }}>Lead Captured</span>
-        <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#25D366" }} />
-      </div>
-      <div className="flex items-center gap-2 p-2 rounded-lg" style={{ background: "var(--cream-2)" }}>
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-400 to-purple-600 flex-shrink-0" />
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-dark)" }}>Priya Sharma</div>
-          <div style={{ fontSize: 9, color: "var(--text-muted)" }}>+91 98765 43210</div>
+    <FlowCard>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: "#1A1411" }}>Lead Captured</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#25D366", boxShadow: "0 0 0 3px rgba(37,211,102,0.2)" }} />
+          <span style={{ fontSize: 9, color: "#25D366", fontWeight: 600 }}>New</span>
         </div>
       </div>
-      <div className="flex flex-wrap gap-1">
+      {/* Lead card */}
+      <div style={{ background: "linear-gradient(135deg, #F4EFE3, #EDE7D7)", borderRadius: 12, padding: "10px 12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: "linear-gradient(135deg, #a855f7, #ec4899)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "white", fontWeight: 700 }}>P</div>
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#1A1411" }}>Priya Sharma</div>
+            <div style={{ fontSize: 10, color: "#9C8F83" }}>+91 98765 43210</div>
+          </div>
+        </div>
+      </div>
+      {/* Tags */}
+      <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
         {["Warm Lead", "Fitness"].map(t => (
-          <span key={t} className="px-1.5 py-0.5 rounded-full" style={{ fontSize: 9, fontWeight: 600, background: "rgba(37,211,102,0.1)", color: "#25D366", border: "1px solid rgba(37,211,102,0.25)" }}>{t}</span>
+          <span key={t} style={{ fontSize: 9, fontWeight: 700, padding: "3px 8px", borderRadius: 99, background: "rgba(37,211,102,0.08)", color: "#25D366", border: "1px solid rgba(37,211,102,0.2)" }}>{t}</span>
         ))}
       </div>
-    </div>
+    </FlowCard>
   );
 }
 
+/* ── Step 5: Pipeline ── */
 function StepPipeline() {
+  const stages = [
+    { label: "New Lead", done: true },
+    { label: "Interested", active: true },
+    { label: "Discovery Call", done: false },
+  ];
   return (
-    <div className="card p-3 flex flex-col gap-2" style={{ minWidth: 160 }}>
-      <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-dark)", marginBottom: 2 }}>Pipeline Stage</span>
-      {[
-        { label: "New Lead", active: false },
-        { label: "Interested", active: true },
-        { label: "Discovery Call", active: false },
-      ].map(({ label, active }) => (
-        <div key={label} className="flex items-center gap-2 px-2 py-1.5 rounded-lg" style={{ background: active ? "rgba(37,211,102,0.08)" : "var(--cream-2)", border: active ? "1px solid rgba(37,211,102,0.3)" : "1px solid transparent" }}>
-          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: active ? "#25D366" : "var(--text-muted)" }} />
-          <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, color: active ? "#25D366" : "var(--text-muted)" }}>{label}</span>
-        </div>
-      ))}
-    </div>
+    <FlowCard>
+      <span style={{ fontSize: 11, fontWeight: 700, color: "#1A1411" }}>Pipeline</span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+        {stages.map(({ label, done, active }) => (
+          <div key={label} style={{
+            display: "flex", alignItems: "center", gap: 8,
+            padding: "7px 10px", borderRadius: 10,
+            background: active ? "rgba(37,211,102,0.07)" : done ? "transparent" : "#F7F7F7",
+            border: active ? "1px solid rgba(37,211,102,0.25)" : "1px solid transparent",
+          }}>
+            <div style={{
+              width: 16, height: 16, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
+              background: done ? "#25D366" : active ? "rgba(37,211,102,0.15)" : "#E5DFD0",
+              border: active ? "1.5px solid rgba(37,211,102,0.4)" : "none",
+            }}>
+              {done && <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>}
+              {active && <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#25D366" }} />}
+            </div>
+            <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, color: active ? "#25D366" : done ? "#9C8F83" : "#6B6157" }}>{label}</span>
+          </div>
+        ))}
+      </div>
+    </FlowCard>
   );
 }
 
+/* ── Step 6: Converted ── */
 function StepConverted() {
   return (
-    <div className="card p-3 flex flex-col gap-2" style={{ minWidth: 160, background: "linear-gradient(145deg, #f0fff6, white)" }}>
-      <div className="flex items-center gap-1.5 mb-1">
-        <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "#25D366" }}>
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>
+    <FlowCard style={{ background: "linear-gradient(145deg, #f0fff8, white)", border: "1px solid rgba(37,211,102,0.18)", boxShadow: "0 4px 24px rgba(37,211,102,0.08), 0 1px 4px rgba(37,211,102,0.06)" }}>
+      {/* Checkmark header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#25D366", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 12px rgba(37,211,102,0.35)" }}>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5 6.5-7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 700, color: "#25D366" }}>Client Enrolled!</span>
-      </div>
-      <div className="flex items-center gap-2 p-2 rounded-lg" style={{ background: "rgba(37,211,102,0.07)", border: "1px solid rgba(37,211,102,0.2)" }}>
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-400 to-purple-600 flex-shrink-0" />
         <div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-dark)" }}>Priya Sharma</div>
-          <div style={{ fontSize: 9, color: "#25D366", fontWeight: 600 }}>₹12,000 · Fitness Pro</div>
+          <div style={{ fontSize: 11, fontWeight: 800, color: "#1A1411" }}>Enrolled! 🎉</div>
+          <div style={{ fontSize: 9, color: "#25D366", fontWeight: 600 }}>3 days after first comment</div>
         </div>
       </div>
-      <div style={{ fontSize: 9, color: "var(--text-muted)" }}>Enrolled 3 days after first comment</div>
-    </div>
+      {/* Revenue card */}
+      <div style={{ background: "rgba(37,211,102,0.07)", borderRadius: 12, padding: "9px 12px", border: "1px solid rgba(37,211,102,0.15)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 30, height: 30, borderRadius: "50%", background: "linear-gradient(135deg, #a855f7, #ec4899)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "white", fontWeight: 700 }}>P</div>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#1A1411" }}>Priya Sharma</div>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#25D366" }}>₹12,000</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ fontSize: 9, color: "#9C8F83", fontWeight: 500 }}>Fitness Pro · 3-month program</div>
+    </FlowCard>
   );
 }
 
 const stepCards = [
-  { card: <StepInstagramComment />, label: "Instagram Comment" },
-  { card: <StepAutoDM />, label: "Auto DM" },
-  { card: <StepWhatsApp />, label: "WhatsApp Conversation" },
-  { card: <StepLeadCaptured />, label: "Lead Captured" },
-  { card: <StepPipeline />, label: "Pipeline Stage" },
-  { card: <StepConverted />, label: "Client Converted" },
+  <StepInstagramComment key="ig" />,
+  <StepAutoDM key="dm" />,
+  <StepWhatsApp key="wa" />,
+  <StepLeadCaptured key="lead" />,
+  <StepPipeline key="pipe" />,
+  <StepConverted key="conv" />,
 ];
 
 export default function CreatorsHero() {
@@ -201,35 +315,34 @@ export default function CreatorsHero() {
           className="body-sm"
           style={{ color: "var(--text-muted)" }}
         >
-          Trusted by 200+ Indian creators · Free 14-day trial · No credit card
-          required
+          Trusted by 200+ Indian creators · Free 14-day trial · No credit card required
         </motion.p>
       </div>
 
       {/* Visual flow */}
       <motion.div
-        initial={{ opacity: 0, y: 56 }}
+        initial={{ opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.9, delay: 0.55 }}
-        className="relative z-10 mt-16 w-full max-w-5xl mx-auto"
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="relative z-10 mt-20 w-full max-w-6xl mx-auto overflow-x-auto pb-2"
       >
-        <div className="flex flex-wrap justify-center items-start gap-2 sm:gap-3">
-          {stepCards.map((step, i) => (
-            <div key={i} className="flex items-center gap-2 sm:gap-3">
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "center", gap: 0, minWidth: "max-content", margin: "0 auto", padding: "0 16px" }}>
+          {stepCards.map((card, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center" }}>
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 + i * 0.08 }}
+                transition={{ duration: 0.45, delay: 0.55 + i * 0.09 }}
               >
-                {step.card}
+                {card}
               </motion.div>
               {i < stepCards.length - 1 && (
-                <div className="hidden sm:flex items-center self-center">
-                  <div className="w-4 h-[2px] rounded-full" style={{ background: "rgba(37,211,102,0.35)" }} />
-                  <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
-                    <path d="M1 1l4 4-4 4" stroke="#25D366" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <div style={{ display: "flex", alignItems: "center", padding: "0 6px", marginTop: -20 }}>
+                  <div style={{ width: 20, height: 1.5, background: "linear-gradient(90deg, rgba(37,211,102,0.3), rgba(37,211,102,0.6))", borderRadius: 99 }} />
+                  <svg width="7" height="11" viewBox="0 0 7 11" fill="none">
+                    <path d="M1 1l5 4.5L1 10" stroke="#25D366" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
               )}
@@ -240,3 +353,4 @@ export default function CreatorsHero() {
     </section>
   );
 }
+
