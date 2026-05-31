@@ -1,10 +1,44 @@
 "use client";
 
+import Link from "next/link";
+
 const cols = [
-  { heading: "Product",  links: ["Features","Automations","Integrations","Pricing","Changelog"] },
-  { heading: "Company",  links: ["About","Blog","Contact","Careers"] },
-  { heading: "Compare",  links: ["vs AiSensy","vs QuickReply","vs BotSpace","vs WATI"] },
-  { heading: "Legal",    links: ["Privacy Policy","Terms","Refund Policy"] },
+  {
+    heading: "Product",
+    links: [
+      { label: "Features",      href: "#" },
+      { label: "Automations",   href: "#" },
+      { label: "Integrations",  href: "#" },
+      { label: "Pricing",       href: "/pricing" },
+      { label: "Changelog",     href: "#" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { label: "About",    href: "#" },
+      { label: "Blog",     href: "#" },
+      { label: "Contact",  href: "mailto:support@tellero.in" },
+      { label: "Careers",  href: "#" },
+    ],
+  },
+  {
+    heading: "Compare",
+    links: [
+      { label: "vs AiSensy",     href: "#" },
+      { label: "vs QuickReply",  href: "#" },
+      { label: "vs BotSpace",    href: "#" },
+      { label: "vs WATI",        href: "#" },
+    ],
+  },
+  {
+    heading: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Use",   href: "/terms"   },
+      { label: "Refund Policy",  href: "#"         },
+    ],
+  },
 ];
 
 export default function Footer() {
@@ -24,14 +58,15 @@ export default function Footer() {
             <div key={col.heading}>
               <p className="label mb-4" style={{ color: "rgba(255,255,255,0.18)" }}>{col.heading}</p>
               <ul className="flex flex-col gap-3">
-                {col.links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="body-sm transition-colors" style={{ color: "rgba(255,255,255,0.35)", textDecoration: "none" }}
+                {col.links.map(({ label, href }) => (
+                  <li key={label}>
+                    <Link href={href} className="body-sm transition-colors"
+                      style={{ color: "rgba(255,255,255,0.35)", textDecoration: "none" }}
                       onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
                       onMouseOut={(e)  => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
                     >
-                      {link}
-                    </a>
+                      {label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -43,9 +78,23 @@ export default function Footer() {
           <p className="body-sm" style={{ color: "rgba(255,255,255,0.2)", fontSize: 12 }}>
             © 2026 Tellero · Made for Indian D2C brands 🇮🇳
           </p>
-          <a href="mailto:support@tellero.in" className="body-sm" style={{ color: "rgba(255,255,255,0.25)", fontSize: 12, textDecoration: "none" }}>
-            support@tellero.in
-          </a>
+          <div className="flex items-center gap-5">
+            <Link href="/privacy" style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", textDecoration: "none" }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
+              onMouseOut={(e)  => (e.currentTarget.style.color = "rgba(255,255,255,0.2)")}>
+              Privacy Policy
+            </Link>
+            <Link href="/terms" style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", textDecoration: "none" }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
+              onMouseOut={(e)  => (e.currentTarget.style.color = "rgba(255,255,255,0.2)")}>
+              Terms of Use
+            </Link>
+            <a href="mailto:support@tellero.in" style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", textDecoration: "none" }}
+              onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
+              onMouseOut={(e)  => (e.currentTarget.style.color = "rgba(255,255,255,0.2)")}>
+              support@tellero.in
+            </a>
+          </div>
         </div>
       </div>
     </footer>
