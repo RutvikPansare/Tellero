@@ -19,9 +19,11 @@ function FlowCard({ children, style = {} }: { children: React.ReactNode; style?:
         boxShadow: "0 4px 24px rgba(26,20,17,0.07), 0 1px 4px rgba(26,20,17,0.04)",
         padding: "14px 16px",
         width: 172,
+        height: 200,
         display: "flex",
         flexDirection: "column",
         gap: 10,
+        overflow: "hidden",
         ...style,
       }}
     >
