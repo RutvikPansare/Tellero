@@ -59,11 +59,16 @@ export async function POST(request: NextRequest) {
 
   /* Get phone_number_id */
   const phonesRes = await fetch(
-    `https://graph.facebook.com/v19.0/${profile.waba_id}/phone_numbers`,
+    `https://graph.facebook.com/v18.0/${profile.waba_id}/phone_numbers`,
     { headers: { Authorization: `Bearer ${profile.meta_access_token}` } }
   )
   if (!phonesRes.ok) {
-    return NextResponse.json({ error: 'Failed to fetch phone number from Meta' }, { status: 502 })
+    const phonesErr = await phonesRes.json().catch(() => ({}))
+    console.error('[inbox/new] Meta phone_numbers error:', phonesErr)
+    return NextResponse.json(
+      { error: (phonesErr as any)?.error?.message ?? 'Failed to fetch phone number from Meta' },
+      { status: 502 }
+    )
   }
   const phonesData: { data: Array<{ id: string; display_phone_number: string }> } = await phonesRes.json()
   const phoneNumberId = phonesData.data?.[0]?.id
@@ -97,7 +102,7 @@ export async function POST(request: NextRequest) {
 
   /* Send template message via Meta */
   const metaRes = await fetch(
-    `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`,
+    `https://graph.facebook.com/v18.0/${phoneNumberId}/messages`,
     {
       method:  'POST',
       headers: {
