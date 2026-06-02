@@ -49,7 +49,6 @@ export function CreateTemplateModal({ open, onClose, onSuccess }: Props) {
         display: "flex", alignItems: "center", justifyContent: "center",
         padding: 24,
       }}
-      {/* Intentionally no onClick — users lose progress if modal closes accidentally */}
     >
       {/* Modal card */}
       <div style={{
