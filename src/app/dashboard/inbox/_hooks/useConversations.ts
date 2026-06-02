@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Database } from '@/types/database'
 
 export type Conversation = Database['public']['Tables']['conversations']['Row']
-export type InboxFilter = 'all' | 'open' | 'mine' | 'unassigned'
+export type InboxFilter = 'all' | 'open' | 'mine' | 'unassigned' | 'resolved'
 
 interface UseConversationsReturn {
   conversations:  Conversation[]
@@ -40,7 +40,6 @@ export function useConversations(userId: string): UseConversationsReturn {
       .from('conversations')
       .select('*')
       .eq('user_id', userId)
-      .neq('status', 'resolved')
       .order('last_message_at', { ascending: false, nullsFirst: false })
       .then(({ data, error: dbErr }) => {
         if (cancelled) return
@@ -87,19 +86,23 @@ export function useConversations(userId: string): UseConversationsReturn {
   }, [userId])
 
   // ── Client-side filtering (no extra queries) ───────────────────
+  const active = all.filter(c => c.status !== 'resolved')
+
   const filtered = all.filter(c => {
-    if (filter === 'all')        return true
+    if (filter === 'all')        return c.status !== 'resolved'
     if (filter === 'open')       return c.status === 'open'
-    if (filter === 'mine')       return c.assigned_to === userId
-    if (filter === 'unassigned') return c.assigned_to === null
+    if (filter === 'mine')       return c.assigned_to === userId && c.status !== 'resolved'
+    if (filter === 'unassigned') return c.assigned_to === null && c.status !== 'resolved'
+    if (filter === 'resolved')   return c.status === 'resolved'
     return true
   })
 
   const counts: Record<InboxFilter, number> = {
-    all:        all.length,
+    all:        active.length,
     open:       all.filter(c => c.status === 'open').length,
-    mine:       all.filter(c => c.assigned_to === userId).length,
-    unassigned: all.filter(c => c.assigned_to === null).length,
+    mine:       all.filter(c => c.assigned_to === userId && c.status !== 'resolved').length,
+    unassigned: all.filter(c => c.assigned_to === null && c.status !== 'resolved').length,
+    resolved:   all.filter(c => c.status === 'resolved').length,
   }
 
   return { conversations: all, filtered, loading, error, filter, setFilter, counts, refetch }

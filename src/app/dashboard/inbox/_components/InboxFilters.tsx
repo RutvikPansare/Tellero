@@ -13,6 +13,7 @@ const TABS: Array<{ key: InboxFilter; label: string }> = [
   { key: 'open',       label: 'Open'       },
   { key: 'mine',       label: 'Mine'       },
   { key: 'unassigned', label: 'Unassigned' },
+  { key: 'resolved',   label: 'Resolved'   },
 ]
 
 export function InboxFilters({ active, counts, onChange }: InboxFiltersProps) {
