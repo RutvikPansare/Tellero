@@ -93,12 +93,8 @@ export async function POST(request: NextRequest) {
     metaComponents.push({ type: 'body', parameters: bodyParams })
   }
 
-  /* Map language to Meta locale format (e.g. "en" → "en_US", "hi" → "hi") */
-  const langMap: Record<string, string> = {
-    en: 'en_US', en_GB: 'en_GB', hi: 'hi', mr: 'mr', gu: 'gu',
-    ta: 'ta', te: 'te', kn: 'kn', ml: 'ml', pa: 'pa',
-  }
-  const langCode = langMap[tmpl.language] ?? tmpl.language
+  /* Use the language code exactly as stored — it matches what was sent to Meta on creation */
+  const langCode = tmpl.language
 
   /* Send template message via Meta */
   const metaRes = await fetch(
