@@ -205,17 +205,20 @@ function TemplatePicker({
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      const { data } = await (supabase as any)
-        .from('templates')
-        .select('id, name, language, body, components, variable_labels')
-        .eq('user_id', user.id)
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false })
-      setTemplates(data ?? [])
-      setLoading(false)
+      try {
+        const supabase = createClient()
+        const { data, error } = await (supabase as any)
+          .from('templates')
+          .select('id, name, language, body, components, variable_labels')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false })
+        if (error) console.error('[TemplatePicker] query error:', error)
+        setTemplates(data ?? [])
+      } catch (err) {
+        console.error('[TemplatePicker] load error:', err)
+      } finally {
+        setLoading(false)
+      }
     }
     load()
   }, [])
