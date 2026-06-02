@@ -59,6 +59,7 @@ export function TemplateDetailModal({ template, onClose, onUpdated }: Props) {
   const buttonsComp= components.find(c => c.type === "BUTTONS");
 
   async function handleRefresh() {
+    if (!template) return;
     setRefreshing(true);
     setRefreshMsg(null);
     try {
