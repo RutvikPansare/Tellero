@@ -41,7 +41,6 @@ export function CreateTemplateModal({ open, onClose, onSuccess }: Props) {
   const canGoBack  = state.step > 1;
 
   return (
-    /* Backdrop */
     <div
       style={{
         position: "fixed", inset: 0, zIndex: 200,
