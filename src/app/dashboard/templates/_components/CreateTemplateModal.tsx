@@ -122,7 +122,7 @@ export function CreateTemplateModal({ open, onClose, onSuccess }: Props) {
         </div>
 
         {/* ── Body ────────────────────────────────────────── */}
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+        <div style={{ flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
           {state.step === 1 && <StepBasicInfo   state={state} dispatch={dispatch} />}
           {state.step === 2 && <StepContent      state={state} dispatch={dispatch} />}
           {state.step === 3 && <StepPreview      state={state} dispatch={dispatch} />}

@@ -239,7 +239,7 @@ export function StepContent({ state, dispatch }: { state: CreateTemplateState; d
   const headerTypes = ["TEXT", "IMAGE", "VIDEO", "DOCUMENT"] as const;
 
   return (
-    <div style={{ flex: 1, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16, overflowY: "auto" }}>
+    <div style={{ flex: 1, minHeight: 0, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16, overflowY: "auto" }}>
 
       {/* ── Header (optional) ─────────────────────────────── */}
       <div style={sectionStyle}>
