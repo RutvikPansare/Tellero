@@ -8,6 +8,7 @@ import { ContactDrawer }     from "./_components/ContactDrawer";
 import { BulkActionBar }     from "./_components/BulkActionBar";
 import { ManageTagsModal }   from "./_components/ManageTagsModal";
 import { ImportCsvModal }    from "./_components/ImportCsvModal";
+import { AddContactModal }   from "./_components/AddContactModal";
 import { useContacts }       from "./_hooks/useContacts";
 import { useContactTags }    from "./_hooks/useContactTags";
 import { createClient }      from "@/lib/supabase/client";
@@ -60,6 +61,7 @@ export default function ContactsPage() {
   const [importing,     setImporting]     = useState(false);
   const [tagsModalOpen,   setTagsModalOpen]   = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [addModalOpen,    setAddModalOpen]    = useState(false);
 
   const {
     contacts, totalCount, loading, error,
@@ -175,6 +177,7 @@ export default function ContactsPage() {
         contacts={contacts}
         totalCount={totalCount}
         importing={importing}
+        onAdd={() => setAddModalOpen(true)}
         onManageTags={() => setTagsModalOpen(true)}
         onImport={() => setImportModalOpen(true)}
       />
@@ -270,6 +273,13 @@ export default function ContactsPage() {
         <ImportCsvModal
           onClose={() => setImportModalOpen(false)}
           onFile={handleImportFile}
+        />
+      )}
+
+      {addModalOpen && (
+        <AddContactModal
+          onClose={() => setAddModalOpen(false)}
+          onSuccess={() => { refetch(); }}
         />
       )}
     </div>

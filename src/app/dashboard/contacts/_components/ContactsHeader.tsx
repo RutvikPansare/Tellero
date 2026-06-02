@@ -1,4 +1,4 @@
-import { Tag, Upload, Loader2 } from "lucide-react";
+import { Tag, Upload, Loader2, UserPlus } from "lucide-react";
 import type { ContactWithTags } from "@/types/segments";
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
   importing?:    boolean;
   onManageTags:  () => void;
   onImport:      () => void;
+  onAdd:         () => void;
 }
 
 function StatCard({ label, value, sub, accent }: {
@@ -24,7 +25,7 @@ function StatCard({ label, value, sub, accent }: {
   );
 }
 
-export function ContactsHeader({ contacts, totalCount, importing, onManageTags, onImport }: Props) {
+export function ContactsHeader({ contacts, totalCount, importing, onManageTags, onImport, onAdd }: Props) {
   const tagged        = contacts.filter(c => c.contact_tags.length > 0).length;
   const taggedPct     = totalCount > 0 ? Math.round(tagged / totalCount * 100) : 0;
 
@@ -43,6 +44,19 @@ export function ContactsHeader({ contacts, totalCount, importing, onManageTags, 
           </p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
+          <button
+            type="button"
+            onClick={onAdd}
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "9px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600,
+              border: "1.5px solid var(--border)", background: "white",
+              color: "var(--text-mid)", cursor: "pointer", transition: "border-color 0.15s",
+            }}
+            onMouseOver={e=>(e.currentTarget.style.borderColor="var(--text-dark)")}
+            onMouseOut={e =>(e.currentTarget.style.borderColor="var(--border)")}>
+            <UserPlus size={13} /> Add contact
+          </button>
           <button
             type="button"
             onClick={onManageTags}
