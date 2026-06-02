@@ -33,7 +33,7 @@ export function ReplyBox({ onSend, sending, error, onClearError }: ReplyBoxProps
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSend()
     }
@@ -110,7 +110,7 @@ export function ReplyBox({ onSend, sending, error, onClearError }: ReplyBoxProps
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
         <p style={{ margin: 0, fontSize: 11, color: 'var(--text-muted)' }}>
           Replies are sent within the 24-hour service window — free of charge.
-          <span style={{ marginLeft: 6, opacity: 0.7 }}>Cmd+Enter to send</span>
+          <span style={{ marginLeft: 6, opacity: 0.7 }}>Shift+Enter for new line</span>
         </p>
         {nearLimit && (
           <span style={{ fontSize: 11, color: remaining < 100 ? '#EF4444' : 'var(--text-muted)' }}>
