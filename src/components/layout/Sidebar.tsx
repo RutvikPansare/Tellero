@@ -241,6 +241,19 @@ export default function Sidebar() {
             >
               Integrations
             </Link>
+            <Link
+              href="/dashboard/settings/whatsapp"
+              className="flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm transition-all"
+              style={{
+                fontSize: 13,
+                fontWeight: pathname.includes("/whatsapp") ? 600 : 400,
+                color: pathname.includes("/whatsapp") ? "var(--burgundy)" : "var(--text-muted)",
+                background: pathname.includes("/whatsapp") ? "rgba(56,0,8,0.05)" : "transparent",
+                textDecoration: "none",
+              }}
+            >
+              WhatsApp
+            </Link>
           </div>
 
         <button
