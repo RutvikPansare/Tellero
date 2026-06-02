@@ -303,9 +303,12 @@ function TemplatePicker({
     async function load() {
       try {
         const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
         const { data, error } = await (supabase as any)
           .from("templates")
           .select("id, name, body, components")
+          .eq("user_id", user.id)
           .eq("status", "approved")
           .order("created_at", { ascending: false });
         if (error) console.error("[TemplatePicker] query error:", error);
