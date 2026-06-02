@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { ContactsHeader }    from "./_components/ContactsHeader";
 import { ContactsTable }     from "./_components/ContactsTable";
-import { ContactDrawer }     from "./_components/ContactDrawer";
+import { ContactDetailModal } from "./_components/ContactDetailModal";
 import { BulkActionBar }     from "./_components/BulkActionBar";
 import { ManageTagsModal }   from "./_components/ManageTagsModal";
 import { ImportCsvModal }    from "./_components/ImportCsvModal";
@@ -243,7 +243,7 @@ export default function ContactsPage() {
         </p>
       )}
 
-      <ContactDrawer
+      <ContactDetailModal
         contactId={openId}
         onClose={() => setOpenId(null)}
         onDeleted={() => { refetch(); }}

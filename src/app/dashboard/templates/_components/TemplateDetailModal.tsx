@@ -284,7 +284,7 @@ export function TemplateDetailModal({ template, onClose, onUpdated }: Props) {
 
           {template.status === "approved" && (
             <a
-              href="/dashboard/broadcast"
+              href={`/dashboard/broadcast?templateId=${template.id}`}
               style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: "var(--burgundy)", textDecoration: "none" }}
             >
               Use in broadcast <ExternalLink size={13} />
