@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   /* Fetch template */
   const { data: tmpl, error: tmplErr } = await admin
     .from('templates')
-    .select('id, name, language, components, variable_labels, body')
+    .select('id, name, language, components, variable_labels')
     .eq('id', templateId)
     .eq('user_id', user.id)
     .eq('status', 'approved')
@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
         id: string; name: string; language: string;
         components: Array<{ type: string; text?: string; format?: string }> | null;
         variable_labels: Record<string, string> | null;
-        body: string | null;
       } | null;
       error: unknown;
     }
@@ -132,7 +131,7 @@ export async function POST(request: NextRequest) {
 
   /* Resolve the body text preview (replace variables) */
   const bodyComp    = (tmpl.components ?? []).find(c => c.type === 'BODY')
-  let preview       = bodyComp?.text ?? tmpl.body ?? tmpl.name
+  let preview       = bodyComp?.text ?? tmpl.name
   varNumbers.forEach(n => {
     preview = preview.replace(new RegExp(`\\{\\{${n}\\}\\}`, 'g'), variableValues[String(n)] ?? `{{${n}}}`)
   })
@@ -188,7 +187,7 @@ export async function POST(request: NextRequest) {
     .insert({
       conversation_id: conversationId,
       direction:       'outbound',
-      body:            bodyComp?.text ?? tmpl.body ?? tmpl.name,
+      body:            bodyComp?.text ?? tmpl.name,
       meta_message_id: metaMessageId,
       status:          'sent',
       created_at:      now,
