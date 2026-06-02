@@ -79,35 +79,94 @@ function InsertVarButton({ onClick }: { onClick: () => void }) {
   );
 }
 
+/* ─── Standard contact fields the system can auto-resolve ─── */
+export const STANDARD_VARIABLE_FIELDS: Array<{
+  key:     string;
+  label:   string;
+  example: string;
+  hint:    string;
+}> = [
+  { key: "name",         label: "Full name",    example: "Priya Sharma",    hint: "contact.name" },
+  { key: "first_name",   label: "First name",   example: "Priya",           hint: "first word of name" },
+  { key: "phone",        label: "Phone",        example: "+919876543210",   hint: "contact.phone" },
+  { key: "email",        label: "Email",        example: "priya@gmail.com", hint: "contact.email" },
+  { key: "total_orders", label: "Total orders", example: "3",               hint: "contact.total_orders" },
+  { key: "total_spent",  label: "Total spent",  example: "₹1,500",          hint: "contact.total_spent" },
+];
+
 /* ─── Variable label fields (after body typed) ────────────── */
 function VariableLabels({
   body, labels, onChange,
 }: { body: string; labels: Record<string, string>; onChange: (n: string, v: string) => void }) {
   const vars = extractVariables(body);
   if (!vars.length) return null;
+
   return (
-    <div style={{ marginTop: 10 }}>
-      <p style={{ ...labelStyle, margin: "0 0 8px" }}>Variable sample values</p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        {vars.map(v => {
-          const n = v.replace(/\D/g, "");
-          return (
-            <div key={v} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+    <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 12 }}>
+      <div>
+        <p style={{ ...labelStyle, margin: "0 0 2px" }}>Variable mapping</p>
+        <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>
+          Pick a contact field or type a custom label. Auto-resolved fields are filled automatically when broadcasting.
+        </p>
+      </div>
+
+      {vars.map(v => {
+        const n       = v.replace(/\D/g, "");
+        const current = labels[n] ?? "";
+        const matched = STANDARD_VARIABLE_FIELDS.find(f => f.key === current);
+
+        return (
+          <div key={v} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {/* Row: variable chip + input */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{
                 flexShrink: 0, background: "rgba(56,0,8,0.08)", color: "var(--burgundy)",
                 borderRadius: 4, padding: "3px 8px", fontSize: 12, fontWeight: 700,
                 fontFamily: "monospace",
               }}>{v}</span>
               <input
-                style={{ ...inputStyle, padding: "7px 12px" }}
-                placeholder={`Label for ${v} (e.g. customer name)`}
-                value={labels[n] ?? ""}
+                style={{ ...inputStyle, padding: "7px 12px", flex: 1 }}
+                placeholder="Type a label or pick a field below…"
+                value={current}
                 onChange={e => onChange(n, e.target.value)}
               />
             </div>
-          );
-        })}
-      </div>
+
+            {/* Standard field chips */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 5, paddingLeft: 2 }}>
+              {STANDARD_VARIABLE_FIELDS.map(f => {
+                const sel = current === f.key;
+                return (
+                  <button
+                    key={f.key}
+                    type="button"
+                    title={`Example: "${f.example}" — auto-filled from ${f.hint}`}
+                    onClick={() => onChange(n, sel ? "" : f.key)}
+                    style={{
+                      padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 600,
+                      cursor: "pointer", transition: "all 0.15s",
+                      border: `1.5px solid ${sel ? "var(--burgundy)" : "var(--border)"}`,
+                      background: sel ? "rgba(56,0,8,0.07)" : "white",
+                      color: sel ? "var(--burgundy)" : "var(--text-mid)",
+                    }}
+                    onMouseOver={e => { if (!sel) { e.currentTarget.style.borderColor = "var(--text-mid)"; e.currentTarget.style.color = "var(--text-dark)"; } }}
+                    onMouseOut={e  => { if (!sel) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-mid)"; } }}
+                  >
+                    {f.label}
+                  </button>
+                );
+              })}
+              <span style={{ fontSize: 11, color: "var(--text-muted)", alignSelf: "center", marginLeft: 2 }}>
+                {matched
+                  ? <>✓ Auto-filled from <code style={{ fontFamily: "monospace", color: "var(--text-dark)" }}>{matched.hint}</code></>
+                  : current
+                    ? "Custom — you'll enter this manually when broadcasting"
+                    : ""}
+              </span>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
