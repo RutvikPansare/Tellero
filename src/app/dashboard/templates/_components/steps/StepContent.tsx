@@ -436,29 +436,45 @@ export function StepContent({ state, dispatch }: { state: CreateTemplateState; d
         />
       </div>
 
-      {/* ── Footer (optional) ─────────────────────────────── */}
+      {/* ── Footer (required by Meta) ─────────────────────── */}
       <div style={sectionStyle}>
-        <SectionToggle
-          label="Footer"
-          hint="Optional — short note below the body (e.g. unsubscribe text)"
-          enabled={state.footer.enabled}
-          onToggle={() => dispatch({ type: "SET_FOOTER", patch: { enabled: !state.footer.enabled } })}
-        />
-        {state.footer.enabled && (
-          <div style={{ padding: "0 16px 16px", borderTop: "1px solid var(--border)", paddingTop: 14 }}>
-            <input
-              style={{ ...inputStyle, borderColor: errors.footer ? "#DC2626" : "var(--border)" }}
-              placeholder="Not interested? Reply STOP"
-              maxLength={60}
-              value={state.footer.text}
-              onChange={e => dispatch({ type: "SET_FOOTER", patch: { text: e.target.value } })}
-            />
-            <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "4px 0 0" }}>
-              {state.footer.text.length}/60 characters
+        {/* Header row — no toggle, just info */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 16px" }}>
+          <div>
+            <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "var(--text-dark)" }}>Footer</p>
+            <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}>
+              Opt-out text shown below the message body
             </p>
-            {errors.footer && <p style={{ fontSize: 12, color: "#DC2626", margin: "4px 0 0" }}>{errors.footer}</p>}
           </div>
-        )}
+          <span style={{
+            fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em",
+            padding: "3px 8px", borderRadius: 99,
+            background: "rgba(56,0,8,0.07)", color: "var(--burgundy)",
+            border: "1px solid rgba(56,0,8,0.15)", flexShrink: 0,
+          }}>
+            Required by Meta
+          </span>
+        </div>
+        <div style={{ padding: "0 16px 16px", borderTop: "1px solid var(--border)", paddingTop: 14 }}>
+          <input
+            style={{ ...inputStyle, borderColor: errors.footer ? "#DC2626" : "var(--border)" }}
+            placeholder="Reply STOP to unsubscribe"
+            maxLength={60}
+            value={state.footer.text}
+            onChange={e => dispatch({ type: "SET_FOOTER", patch: { text: e.target.value } })}
+            onFocus={e  => (e.currentTarget.style.borderColor = errors.footer ? "#DC2626" : "var(--text-dark)")}
+            onBlur={e   => (e.currentTarget.style.borderColor = errors.footer ? "#DC2626" : "var(--border)")}
+          />
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+            {errors.footer
+              ? <p style={{ margin: 0, fontSize: 12, color: "#DC2626" }}>{errors.footer}</p>
+              : <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)" }}>You can customise the wording</p>
+            }
+            <p style={{ margin: 0, fontSize: 11, color: "var(--text-muted)", flexShrink: 0, marginLeft: 8 }}>
+              {state.footer.text.length}/60
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* ── Buttons (optional) ────────────────────────────── */}

@@ -28,7 +28,7 @@ const initial: CreateTemplateState = {
   header:   { enabled: false, type: "TEXT", text: "", sampleUrl: "" },
   body:     "",
   variableLabels: {},
-  footer:   { enabled: false, text: "" },
+  footer:   { enabled: true, text: "Reply STOP to unsubscribe" },
   buttons:  { enabled: false, type: "QUICK_REPLY", items: [] },
   isSubmitting: false,
   errors:   {},

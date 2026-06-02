@@ -45,7 +45,9 @@ export function validateStep2(s: Step2State): Record<string, string> {
       errors.headerSampleUrl = "Must be a valid URL starting with https://";
   }
 
-  if (s.footer.enabled && s.footer.text.length > 60)
+  if (!s.footer.text.trim())
+    errors.footer = "Footer opt-out text is required by Meta";
+  else if (s.footer.text.length > 60)
     errors.footer = "Footer cannot exceed 60 characters";
 
   if (s.buttons.enabled) {

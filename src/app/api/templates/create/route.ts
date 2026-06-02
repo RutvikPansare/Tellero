@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
     components.push({ type: "BODY", text: body });
 
-    if (footer?.enabled && footer.text) {
+    if (footer?.text) {
       components.push({ type: "FOOTER", text: footer.text });
     }
 
