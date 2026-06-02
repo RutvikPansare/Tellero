@@ -22,7 +22,7 @@ const labelStyle: React.CSSProperties = {
 
 const sectionStyle: React.CSSProperties = {
   border: "1.5px solid var(--border)", borderRadius: 12,
-  background: "white", overflow: "hidden",
+  background: "white",
 };
 
 /* ─── Toggle row ────────────────────────────────────────── */
@@ -35,6 +35,7 @@ function SectionToggle({
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "13px 16px", cursor: "pointer",
         background: enabled ? "rgba(56,0,8,0.03)" : "white",
+        borderRadius: enabled ? "10px 10px 0 0" : 10,
       }}
       onClick={onToggle}
     >
