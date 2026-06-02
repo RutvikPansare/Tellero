@@ -9,7 +9,6 @@ import {
   MessageSquare, TrendingUp, Eye, FileText, PenLine,
 } from "lucide-react";
 import { broadcastStatusMeta, type BroadcastStatus } from "@/lib/design-system";
-import { createClient } from "@/lib/supabase/client";
 
 /* ─── Types ──────────────────────────────────────────────── */
 
@@ -736,18 +735,17 @@ export default function BroadcastPage() {
     if (!templateId) return;
 
     async function loadAndOpen() {
-      const supabase = createClient();
-      const { data } = await (supabase as any)
-        .from("templates")
-        .select("id, name, body, components")
-        .eq("id", templateId)
-        .eq("status", "approved")
-        .single();
-
-      if (!data) return;
-      const bodyComp = (data.components ?? []).find((c: any) => c.type === "BODY");
-      const message  = bodyComp?.text ?? data.body ?? "";
-      dispatch({ type:"OPEN_WITH_TEMPLATE", templateId: data.id, templateName: data.name, message });
+      try {
+        const res = await fetch(`/api/templates/${templateId}`);
+        if (!res.ok) return;
+        const { template } = await res.json();
+        if (!template || template.status !== "approved") return;
+        const bodyComp = (template.components ?? []).find((c: any) => c.type === "BODY");
+        const message  = bodyComp?.text ?? template.body ?? "";
+        dispatch({ type:"OPEN_WITH_TEMPLATE", templateId: template.id, templateName: template.name, message });
+      } catch {
+        /* silently ignore — user can select the template manually */
+      }
     }
 
     loadAndOpen();
