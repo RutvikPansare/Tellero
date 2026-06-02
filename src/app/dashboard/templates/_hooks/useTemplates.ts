@@ -14,6 +14,7 @@ interface UseTemplatesReturn {
   statusFilter:    TemplateStatus | "all";
   setStatusFilter: (s: TemplateStatus | "all") => void;
   refetch:         () => void;
+  updateTemplate:  (t: Template) => void;
 }
 
 /** Derive body/header/footer/buttons from raw components array */
@@ -43,7 +44,10 @@ export function useTemplates(): UseTemplatesReturn {
   const [statusFilter, setStatusFilter]  = useState<TemplateStatus | "all">("all");
   const [tick, setTick]                  = useState(0);
 
-  const refetch = useCallback(() => setTick((n) => n + 1), []);
+  const refetch        = useCallback(() => setTick((n) => n + 1), []);
+  const updateTemplate = useCallback((updated: Template) => {
+    setAll(prev => prev.map(t => t.id === updated.id ? deriveFields(updated) : t));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,5 +87,5 @@ export function useTemplates(): UseTemplatesReturn {
     return matchSearch && matchStatus;
   });
 
-  return { templates, allTemplates, loading, error, searchQuery, setSearchQuery, statusFilter, setStatusFilter, refetch };
+  return { templates, allTemplates, loading, error, searchQuery, setSearchQuery, statusFilter, setStatusFilter, refetch, updateTemplate };
 }

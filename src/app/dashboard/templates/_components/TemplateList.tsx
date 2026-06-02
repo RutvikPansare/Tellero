@@ -23,6 +23,7 @@ interface Props {
   setStatusFilter:(v: TemplateStatus | "all") => void;
   onDelete?:     (id: string) => void;
   onRefresh?:    (id: string) => void;
+  onView?:       (t: Template) => void;
   onNew:         () => void;
 }
 
@@ -86,7 +87,7 @@ export function TemplateList({
   templates, loading, error,
   searchQuery, setSearchQuery,
   statusFilter, setStatusFilter,
-  onDelete, onRefresh, onNew,
+  onDelete, onRefresh, onView, onNew,
 }: Props) {
   const filtered = !!(searchQuery || statusFilter !== "all");
 
@@ -163,6 +164,7 @@ export function TemplateList({
               template={t}
               onDelete={onDelete}
               onRefresh={onRefresh}
+              onView={onView}
             />
           ))}
         </div>

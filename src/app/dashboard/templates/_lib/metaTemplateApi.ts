@@ -72,11 +72,11 @@ export async function getTemplateStatus(
   wabaId: string,
   accessToken: string,
   templateId: string
-): Promise<{ status: string; reason?: string }> {
+): Promise<{ status: string; reason?: string; category?: string }> {
   const data = await metaFetch<{
-    data: Array<{ id: string; status: string; rejected_reason?: string }>;
+    data: Array<{ id: string; status: string; rejected_reason?: string; category?: string }>;
   }>(
-    `${BASE}/${wabaId}/message_templates?fields=id,status,rejected_reason&access_token=${accessToken}`,
+    `${BASE}/${wabaId}/message_templates?fields=id,status,rejected_reason,category&access_token=${accessToken}`,
     { method: "GET" },
     `getTemplateStatus(${templateId})`
   );
@@ -84,7 +84,7 @@ export async function getTemplateStatus(
   const found = data.data.find((t) => t.id === templateId);
   if (!found) throw new TemplateApiError(`Template ${templateId} not found`, 404);
 
-  return { status: found.status, reason: found.rejected_reason };
+  return { status: found.status, reason: found.rejected_reason, category: found.category };
 }
 
 export async function deleteTemplate(

@@ -23,11 +23,11 @@ export async function POST() {
     /* Fetch all pending templates that have a meta_template_id */
     const { data: pending } = await db
       .from("templates")
-      .select("id, meta_template_id, status")
+      .select("id, meta_template_id, status, category")
       .eq("user_id", user.id)
       .eq("status", "pending")
       .not("meta_template_id", "is", null) as {
-        data: Array<{ id: string; meta_template_id: string; status: string }> | null
+        data: Array<{ id: string; meta_template_id: string; status: string; category: string }> | null
       };
 
     if (!pending?.length) return NextResponse.json({ synced: 0 });
@@ -36,7 +36,7 @@ export async function POST() {
     await Promise.all(
       pending.map(async (t) => {
         try {
-          const { status, reason } = await getTemplateStatus(
+          const { status, reason, category } = await getTemplateStatus(
             profile.waba_id!,
             profile.meta_access_token!,
             t.meta_template_id
@@ -47,15 +47,18 @@ export async function POST() {
             status === "REJECTED" ? "rejected" :
             status === "PAUSED"   ? "paused"   : "pending";
 
-          if (mapped !== t.status) {
-            await db
-              .from("templates")
-              .update({
-                status:           mapped,
-                rejection_reason: reason ?? null,
-                approved_at:      mapped === "approved" ? new Date().toISOString() : null,
-              })
-              .eq("id", t.id);
+          const metaCategory = category ?? null;
+          const catChanged   = metaCategory && t.category && metaCategory !== t.category;
+
+          if (mapped !== t.status || catChanged) {
+            const updatePayload: Record<string, unknown> = {
+              status:           mapped,
+              rejection_reason: reason ?? null,
+              approved_at:      mapped === "approved" ? new Date().toISOString() : null,
+            };
+            if (metaCategory) updatePayload.category = metaCategory;
+
+            await db.from("templates").update(updatePayload).eq("id", t.id);
             synced++;
           }
         } catch {

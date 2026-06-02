@@ -4,17 +4,20 @@ import { useState } from "react";
 import { TemplatesHeader }       from "./_components/TemplatesHeader";
 import { TemplateList }          from "./_components/TemplateList";
 import { CreateTemplateModal }   from "./_components/CreateTemplateModal";
+import { TemplateDetailModal }   from "./_components/TemplateDetailModal";
 import { useTemplates }          from "./_hooks/useTemplates";
 import { useTemplateSync }       from "./_hooks/useTemplateSync";
+import type { Template }         from "./_lib/templateHelpers";
 
 export default function TemplatesPage() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [createOpen,    setCreateOpen]    = useState(false);
+  const [viewTemplate,  setViewTemplate]  = useState<Template | null>(null);
 
   const {
     templates, allTemplates, loading, error,
     searchQuery, setSearchQuery,
     statusFilter, setStatusFilter,
-    refetch,
+    refetch, updateTemplate,
   } = useTemplates();
 
   const { syncing, lastSynced, sync } = useTemplateSync(refetch);
@@ -25,6 +28,11 @@ export default function TemplatesPage() {
     refetch();
   }
 
+  function handleUpdated(updated: Template) {
+    updateTemplate(updated);
+    setViewTemplate(updated);
+  }
+
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: "28px 32px", display: "flex", flexDirection: "column", gap: 24 }}>
       <TemplatesHeader
@@ -32,7 +40,7 @@ export default function TemplatesPage() {
         syncing={syncing}
         lastSynced={lastSynced}
         onSync={sync}
-        onNew={() => setModalOpen(true)}
+        onNew={() => setCreateOpen(true)}
       />
 
       <TemplateList
@@ -45,13 +53,20 @@ export default function TemplatesPage() {
         setStatusFilter={setStatusFilter}
         onDelete={handleDelete}
         onRefresh={_id => { sync(); }}
-        onNew={() => setModalOpen(true)}
+        onView={setViewTemplate}
+        onNew={() => setCreateOpen(true)}
       />
 
       <CreateTemplateModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
         onSuccess={refetch}
+      />
+
+      <TemplateDetailModal
+        template={viewTemplate}
+        onClose={() => setViewTemplate(null)}
+        onUpdated={handleUpdated}
       />
     </div>
   );
