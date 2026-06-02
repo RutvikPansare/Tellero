@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, RefreshCw, Globe, AlertTriangle, CheckCircle2, Clock, Loader2, ExternalLink } from "lucide-react";
+import { X, RefreshCw, Globe, AlertTriangle, CheckCircle2, Clock, Loader2, ExternalLink, MessageSquare } from "lucide-react";
 import { TemplateStatusBadge } from "./TemplateStatusBadge";
 import { LANGUAGE_LABELS, CATEGORIES, relativeTime } from "../_lib/templateHelpers";
 import type { Template } from "../_lib/templateHelpers";
@@ -35,12 +35,13 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 }
 
 interface Props {
-  template:  Template | null;
-  onClose:   () => void;
-  onUpdated: (t: Template) => void;
+  template:     Template | null;
+  onClose:      () => void;
+  onUpdated:    (t: Template) => void;
+  onStartChat?: (templateId: string) => void;
 }
 
-export function TemplateDetailModal({ template, onClose, onUpdated }: Props) {
+export function TemplateDetailModal({ template, onClose, onUpdated, onStartChat }: Props) {
   const [refreshing,        setRefreshing]        = useState(false);
   const [refreshMsg,        setRefreshMsg]        = useState<string | null>(null);
   const [categoryChangeMsg, setCategoryChangeMsg] = useState<string | null>(null);
@@ -283,12 +284,24 @@ export function TemplateDetailModal({ template, onClose, onUpdated }: Props) {
           ) : <div />}
 
           {template.status === "approved" && (
-            <a
-              href={`/dashboard/broadcast?templateId=${template.id}`}
-              style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: "var(--burgundy)", textDecoration: "none" }}
-            >
-              Use in broadcast <ExternalLink size={13} />
-            </a>
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              {onStartChat && (
+                <button
+                  onClick={() => onStartChat(template.id)}
+                  style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: "var(--burgundy)", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                  onMouseOver={e => (e.currentTarget.style.opacity = "0.7")}
+                  onMouseOut={e  => (e.currentTarget.style.opacity = "1")}
+                >
+                  <MessageSquare size={13} /> Use in chat
+                </button>
+              )}
+              <a
+                href={`/dashboard/broadcast?templateId=${template.id}`}
+                style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: "var(--burgundy)", textDecoration: "none" }}
+              >
+                Use in broadcast <ExternalLink size={13} />
+              </a>
+            </div>
           )}
 
           <button

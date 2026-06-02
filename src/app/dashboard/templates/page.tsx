@@ -5,13 +5,15 @@ import { TemplatesHeader }       from "./_components/TemplatesHeader";
 import { TemplateList }          from "./_components/TemplateList";
 import { CreateTemplateModal }   from "./_components/CreateTemplateModal";
 import { TemplateDetailModal }   from "./_components/TemplateDetailModal";
+import { NewConversationModal }  from "../inbox/_components/NewConversationModal";
 import { useTemplates }          from "./_hooks/useTemplates";
 import { useTemplateSync }       from "./_hooks/useTemplateSync";
 import type { Template }         from "./_lib/templateHelpers";
 
 export default function TemplatesPage() {
-  const [createOpen,    setCreateOpen]    = useState(false);
-  const [viewTemplate,  setViewTemplate]  = useState<Template | null>(null);
+  const [createOpen,      setCreateOpen]      = useState(false);
+  const [viewTemplate,    setViewTemplate]    = useState<Template | null>(null);
+  const [chatTemplateId,  setChatTemplateId]  = useState<string | null>(null);
 
   const {
     templates, allTemplates, loading, error,
@@ -67,7 +69,19 @@ export default function TemplatesPage() {
         template={viewTemplate}
         onClose={() => setViewTemplate(null)}
         onUpdated={handleUpdated}
+        onStartChat={id => { setViewTemplate(null); setChatTemplateId(id); }}
       />
+
+      {chatTemplateId && (
+        <NewConversationModal
+          initialTemplateId={chatTemplateId}
+          onClose={() => setChatTemplateId(null)}
+          onConversationCreated={conversationId => {
+            setChatTemplateId(null);
+            window.location.href = `/dashboard/inbox?conversation=${conversationId}`;
+          }}
+        />
+      )}
     </div>
   );
 }

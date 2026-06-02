@@ -198,8 +198,8 @@ function ContactSearch({
 /* ─── Template picker (compact list) ───────────────────── */
 
 function TemplatePicker({
-  selectedId, onSelect,
-}: { selectedId: string; onSelect: (t: ApprovedTemplate) => void }) {
+  selectedId, onSelect, initialTemplateId,
+}: { selectedId: string; onSelect: (t: ApprovedTemplate) => void; initialTemplateId?: string }) {
   const [templates, setTemplates] = useState<ApprovedTemplate[]>([])
   const [loading,   setLoading]   = useState(true)
 
@@ -209,7 +209,12 @@ function TemplatePicker({
         const res = await fetch('/api/templates/approved')
         if (!res.ok) throw new Error('Failed to load templates')
         const json = await res.json()
-        setTemplates(json.templates ?? [])
+        const list: ApprovedTemplate[] = json.templates ?? []
+        setTemplates(list)
+        if (initialTemplateId) {
+          const pre = list.find(t => t.id === initialTemplateId)
+          if (pre) onSelect(pre)
+        }
       } catch (err) {
         console.error('[TemplatePicker] load error:', err)
       } finally {
@@ -217,6 +222,7 @@ function TemplatePicker({
       }
     }
     load()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function bodyText(t: ApprovedTemplate) {
@@ -281,11 +287,12 @@ function TemplatePicker({
 /* ─── Main modal ───────────────────────────────────────── */
 
 interface Props {
-  onClose:           () => void
+  onClose:               () => void
   onConversationCreated: (conversationId: string) => void
+  initialTemplateId?:    string
 }
 
-export function NewConversationModal({ onClose, onConversationCreated }: Props) {
+export function NewConversationModal({ onClose, onConversationCreated, initialTemplateId }: Props) {
   const [selectedContact, setSelectedContact] = useState<ContactHit | null>(null)
   const [phone,           setPhone]           = useState('')
   const [template,        setTemplate]        = useState<ApprovedTemplate | null>(null)
@@ -420,6 +427,7 @@ export function NewConversationModal({ onClose, onConversationCreated }: Props) 
               <TemplatePicker
                 selectedId={template?.id ?? ''}
                 onSelect={t => { setTemplate(t); setVarValues({}) }}
+                initialTemplateId={initialTemplateId}
               />
             </div>
 
