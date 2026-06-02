@@ -334,7 +334,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const rawBody = await request.text()
 
+  console.log('[meta/webhook] POST received', {
+    sig: request.headers.get('x-hub-signature-256')?.slice(0, 20) + '...',
+    secretSet: !!process.env.META_WEBHOOK_SECRET,
+    bodyLen: rawBody.length,
+  })
+
   if (!verifyMetaSignature(rawBody, request.headers.get('x-hub-signature-256') ?? '')) {
+    console.log('[meta/webhook] signature FAILED')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
