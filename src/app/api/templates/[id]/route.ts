@@ -14,7 +14,7 @@ export async function GET(
   const admin = createAdminClient();
   const { data, error } = await (admin as any)
     .from("templates")
-    .select("id, name, language, body, components, variable_labels, status")
+    .select("id, name, language, components, variable_labels, status")
     .eq("id", params.id)
     .eq("user_id", user.id)
     .single();
