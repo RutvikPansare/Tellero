@@ -253,7 +253,7 @@ export function StepContent({ state, dispatch }: { state: CreateTemplateState; d
             {/* Type selector */}
             <div style={{ paddingTop: 14 }}>
               <p style={{ ...labelStyle, margin: "0 0 8px" }}>Header type</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 6 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 {headerTypes.map(t => {
                   const sel = state.header.type === t;
                   return (
@@ -262,7 +262,8 @@ export function StepContent({ state, dispatch }: { state: CreateTemplateState; d
                       type="button"
                       onClick={() => dispatch({ type: "SET_HEADER", patch: { type: t } })}
                       style={{
-                        padding: "8px 4px", borderRadius: 8, fontSize: 11, fontWeight: 700,
+                        flex: "1 1 auto", minWidth: 80,
+                        padding: "8px 12px", borderRadius: 8, fontSize: 11, fontWeight: 700,
                         textTransform: "uppercase", letterSpacing: "0.06em", cursor: "pointer",
                         border: `1.5px solid ${sel ? "var(--burgundy)" : "var(--border)"}`,
                         background: sel ? "rgba(56,0,8,0.06)" : "white",
