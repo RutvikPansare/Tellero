@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       name:           string;
       category:       "MARKETING" | "UTILITY" | "AUTHENTICATION";
       language:       string;
-      header:         { enabled: boolean; type: string; text: string };
+      header:         { enabled: boolean; type: string; text: string; sampleUrl: string };
       body:           string;
       variableLabels: Record<string, string>;
       footer:         { enabled: boolean; text: string };
@@ -43,6 +43,8 @@ export async function POST(req: Request) {
       };
       if (header.type === "TEXT" && header.text) {
         comp.text = header.text;
+      } else if (header.type !== "TEXT" && header.sampleUrl) {
+        comp.example = { header_url: [header.sampleUrl.trim()] };
       }
       components.push(comp);
     }

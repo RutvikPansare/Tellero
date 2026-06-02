@@ -38,6 +38,13 @@ export function validateStep2(s: Step2State): Record<string, string> {
       errors.headerText = "Header cannot exceed 60 characters";
   }
 
+  if (s.header.enabled && s.header.type !== "TEXT") {
+    if (!s.header.sampleUrl)
+      errors.headerSampleUrl = "A sample URL is required for Meta to review your template";
+    else if (!/^https?:\/\/.+/.test(s.header.sampleUrl.trim()))
+      errors.headerSampleUrl = "Must be a valid URL starting with https://";
+  }
+
   if (s.footer.enabled && s.footer.text.length > 60)
     errors.footer = "Footer cannot exceed 60 characters";
 

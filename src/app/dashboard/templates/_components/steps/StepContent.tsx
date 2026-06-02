@@ -297,15 +297,36 @@ export function StepContent({ state, dispatch }: { state: CreateTemplateState; d
               </div>
             )}
 
-            {/* Media hint if not TEXT */}
+            {/* Sample URL for non-TEXT headers */}
             {state.header.type !== "TEXT" && (
-              <div style={{
-                background: "var(--cream)", borderRadius: 8, padding: "10px 12px",
-                border: "1px dashed var(--border)", textAlign: "center",
-              }}>
-                <p style={{ margin: 0, fontSize: 12, color: "var(--text-muted)" }}>
-                  {state.header.type} will be uploaded when you send the message via the API
+              <div>
+                <p style={{ ...labelStyle, margin: "0 0 6px" }}>
+                  Sample {state.header.type.charAt(0) + state.header.type.slice(1).toLowerCase()} URL
+                  <span style={{ color: "#DC2626", marginLeft: 3 }}>*</span>
                 </p>
+                <input
+                  type="url"
+                  style={{
+                    ...inputStyle,
+                    borderColor: errors.headerSampleUrl ? "#DC2626" : "var(--border)",
+                  }}
+                  placeholder={
+                    state.header.type === "IMAGE"    ? "https://example.com/sample.jpg" :
+                    state.header.type === "VIDEO"    ? "https://example.com/sample.mp4" :
+                                                       "https://example.com/sample.pdf"
+                  }
+                  value={state.header.sampleUrl}
+                  onChange={e => dispatch({ type: "SET_HEADER", patch: { sampleUrl: e.target.value } })}
+                  onFocus={e  => (e.currentTarget.style.borderColor = errors.headerSampleUrl ? "#DC2626" : "var(--text-dark)")}
+                  onBlur={e   => (e.currentTarget.style.borderColor = errors.headerSampleUrl ? "#DC2626" : "var(--border)")}
+                />
+                <p style={{ margin: "5px 0 0", fontSize: 11, color: "var(--text-muted)", lineHeight: 1.5 }}>
+                  Meta needs a publicly accessible sample URL to review your template.
+                  The actual file is uploaded when you send each message via the API.
+                </p>
+                {errors.headerSampleUrl && (
+                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "#DC2626" }}>{errors.headerSampleUrl}</p>
+                )}
               </div>
             )}
           </div>
