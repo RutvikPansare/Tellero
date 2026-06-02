@@ -334,14 +334,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const rawBody = await request.text()
 
-  console.log('[meta/webhook] POST received', {
-    sig: request.headers.get('x-hub-signature-256')?.slice(0, 20) + '...',
-    secretSet: !!process.env.META_WEBHOOK_SECRET,
-    bodyLen: rawBody.length,
-  })
-
   if (!verifyMetaSignature(rawBody, request.headers.get('x-hub-signature-256') ?? '')) {
-    console.log('[meta/webhook] signature FAILED')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -351,7 +344,6 @@ export async function POST(request: NextRequest) {
 
   for (const entry of payload.entry ?? []) {
     const wabaId = entry.id
-    console.log('[meta/webhook] entry wabaId:', wabaId)
     for (const change of entry.changes ?? []) {
       const value = change.value
 
@@ -362,7 +354,6 @@ export async function POST(request: NextRequest) {
         .eq('waba_id', wabaId)
         .single()
 
-      console.log('[meta/webhook] profile lookup:', profile ? `found userId=${profile.id}` : 'NOT FOUND')
       if (!profile) continue
       const userId = profile.id as string
 
