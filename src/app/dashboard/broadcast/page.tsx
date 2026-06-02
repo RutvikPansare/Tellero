@@ -302,17 +302,10 @@ function TemplatePicker({
   useEffect(() => {
     async function load() {
       try {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-        const { data, error } = await (supabase as any)
-          .from("templates")
-          .select("id, name, body, components")
-          .eq("user_id", user.id)
-          .eq("status", "approved")
-          .order("created_at", { ascending: false });
-        if (error) console.error("[TemplatePicker] query error:", error);
-        setTemplates(data ?? []);
+        const res = await fetch("/api/templates/approved");
+        if (!res.ok) throw new Error("Failed to load templates");
+        const json = await res.json();
+        setTemplates(json.templates ?? []);
       } catch (err) {
         console.error("[TemplatePicker] load error:", err);
       } finally {
