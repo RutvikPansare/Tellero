@@ -13,11 +13,14 @@ export async function GET() {
     .eq('id', user.id)
     .single()
 
+  const appUrl      = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ?? 'https://tellero.in'
+  const verifyToken = process.env.META_WEBHOOK_VERIFY_TOKEN ?? 'tellero_webhook_2026'
+
   return NextResponse.json({
     wabaId:      profile?.waba_id        ?? null,
     hasToken:    !!profile?.meta_access_token,
-    webhookUrl:  `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/meta`,
-    verifyToken: process.env.META_WEBHOOK_VERIFY_TOKEN ?? '(not set — add META_WEBHOOK_VERIFY_TOKEN to env)',
+    webhookUrl:  `${appUrl}/api/webhooks/meta`,
+    verifyToken,
   })
 }
 

@@ -322,7 +322,8 @@ export async function GET(request: NextRequest) {
   const token     = sp.get('hub.verify_token')
   const challenge = sp.get('hub.challenge')
 
-  if (mode === 'subscribe' && token === process.env.META_WEBHOOK_VERIFY_TOKEN) {
+  const expectedToken = process.env.META_WEBHOOK_VERIFY_TOKEN ?? 'tellero_webhook_2026'
+  if (mode === 'subscribe' && token === expectedToken) {
     return new NextResponse(challenge, { status: 200 })
   }
   return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
