@@ -351,6 +351,7 @@ export async function POST(request: NextRequest) {
 
   for (const entry of payload.entry ?? []) {
     const wabaId = entry.id
+    console.log('[meta/webhook] entry wabaId:', wabaId)
     for (const change of entry.changes ?? []) {
       const value = change.value
 
@@ -361,6 +362,7 @@ export async function POST(request: NextRequest) {
         .eq('waba_id', wabaId)
         .single()
 
+      console.log('[meta/webhook] profile lookup:', profile ? `found userId=${profile.id}` : 'NOT FOUND')
       if (!profile) continue
       const userId = profile.id as string
 
